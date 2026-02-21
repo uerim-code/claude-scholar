@@ -9,7 +9,7 @@ arguments:
     description: 项目路径（默认为 ~/Code/）
     required: false
   - name: template_repo
-    description: GitHub 模板仓库（格式：owner/repo 或完整 URL，默认：gaoruizhang/template）
+    description: GitHub 模板仓库（格式：owner/repo 或完整 URL，默认：your-username/template）
     required: false
   - name: local
     description: 使用本地模板 ~/Code/template 而非 GitHub（覆盖 template_repo）
@@ -31,7 +31,7 @@ arguments:
 PROJECT_NAME="{{project_name}}"
 PROJECT_PATH="${path:-$HOME/Code}"
 FULL_PATH="$PROJECT_PATH/$PROJECT_NAME"
-TEMPLATE_REPO="{{template_repo:-gaoruizhang/template}}"
+TEMPLATE_REPO="{{template_repo:-your-username/template}}"
 USE_LOCAL="{{local}}"
 INITIAL_TAG="v0.1.0"
 

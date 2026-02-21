@@ -1,8 +1,12 @@
-# Claude Configuration Git Ignore
+# OpenCode Configuration Git Ignore
 
 # System files
 .DS_Store
 Thumbs.db
+
+# Dependencies
+node_modules/
+bun.lock
 
 # Sensitive and local configuration
 .env
