@@ -1,0 +1,3 @@
+# Agent: build-error-resolver
+# Model inherits from main config.toml (no override)
+sandbox_mode = "workspace-write"

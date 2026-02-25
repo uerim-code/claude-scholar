@@ -1,0 +1,108 @@
+# Codex Scholar - Main Configuration
+# Run: bash scripts/setup.sh to configure interactively
+
+# ============================================================
+# Model & Provider (configured by setup.sh)
+# ============================================================
+model = "__MODEL__"
+model_provider = "__PROVIDER_NAME__"
+model_reasoning_effort = "medium"
+disable_response_storage = true
+
+[model_providers.__PROVIDER_NAME__]
+name = "__PROVIDER_NAME__"
+base_url = "__PROVIDER_URL__"
+wire_api = "responses"
+requires_openai_auth = true
+
+# ============================================================
+# Sandbox & Instructions
+# ============================================================
+sandbox_mode = "workspace-write"
+
+developer_instructions = "用中文回答。专业术语保持英文。复杂任务先规划再执行，优先使用已有 skills。"
+
+# ============================================================
+# Features
+# ============================================================
+[features]
+multi_agent = true
+memories = true
+skill_approval = true
+
+# ============================================================
+# MCP Servers (optional, enable after installing zotero-mcp)
+# ============================================================
+[mcp_servers.zotero]
+command = "zotero-mcp"
+args = ["serve"]
+enabled = false
+[mcp_servers.zotero.env]
+ZOTERO_LOCAL = "true"
+NO_PROXY = "localhost,127.0.0.1"
+
+# ============================================================
+# Agents
+# ============================================================
+
+# --- Research Workflow ---
+
+[agents.literature-reviewer]
+description = "Literature search, classification, and trend analysis with Zotero MCP integration"
+config_file = "~/.codex/agents/literature-reviewer/config.toml"
+
+[agents.data-analyst]
+description = "Automated data analysis and visualization"
+config_file = "~/.codex/agents/data-analyst/config.toml"
+
+[agents.rebuttal-writer]
+description = "Systematic rebuttal writing with tone optimization"
+config_file = "~/.codex/agents/rebuttal-writer/config.toml"
+
+[agents.paper-miner]
+description = "Extract writing knowledge from successful papers"
+config_file = "~/.codex/agents/paper-miner/config.toml"
+
+[agents.kaggle-miner]
+description = "Extract engineering practices from Kaggle solutions"
+config_file = "~/.codex/agents/kaggle-miner/config.toml"
+
+# --- Development Workflow ---
+
+[agents.architect]
+description = "ML project architecture specialist for code structure and design patterns"
+config_file = "~/.codex/agents/architect/config.toml"
+
+[agents.bug-analyzer]
+description = "Deep code execution flow analysis and root cause investigation"
+config_file = "~/.codex/agents/bug-analyzer/config.toml"
+
+[agents.build-error-resolver]
+description = "Fix build and type errors with minimal diffs"
+config_file = "~/.codex/agents/build-error-resolver/config.toml"
+
+[agents.code-reviewer]
+description = "Expert code review for quality, security, and maintainability"
+config_file = "~/.codex/agents/code-reviewer/config.toml"
+
+[agents.dev-planner]
+description = "Implementation planning and task breakdown"
+config_file = "~/.codex/agents/dev-planner/config.toml"
+
+[agents.refactor-cleaner]
+description = "Dead code cleanup and consolidation specialist"
+config_file = "~/.codex/agents/refactor-cleaner/config.toml"
+
+[agents.tdd-guide]
+description = "Test-driven development workflow guidance"
+config_file = "~/.codex/agents/tdd-guide/config.toml"
+
+# --- Design & Content ---
+
+[agents.ui-sketcher]
+description = "UI blueprint design and interaction specification"
+config_file = "~/.codex/agents/ui-sketcher/config.toml"
+
+[agents.story-generator]
+description = "User story and narrative generation"
+config_file = "~/.codex/agents/story-generator/config.toml"

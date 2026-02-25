@@ -8,53 +8,49 @@
     <a href="https://github.com/Galaxy-Dawn/claude-scholar/network/members"><img src="https://img.shields.io/github/forks/Galaxy-Dawn/claude-scholar?style=flat-square" alt="Forks"/></a>
     <img src="https://img.shields.io/github/last-commit/Galaxy-Dawn/claude-scholar?style=flat-square" alt="Last Commit"/>
     <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"/>
-    <img src="https://img.shields.io/badge/OpenCode-Compatible-blueviolet?style=flat-square" alt="OpenCode"/>
+    <img src="https://img.shields.io/badge/Codex_CLI-Compatible-blue?style=flat-square" alt="Codex CLI"/>
   </p>
 
   <strong>Language</strong>: <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
 </div>
 
-> Personal OpenCode configuration for academic research and software development — covering the full research lifecycle from ideation to publication.
+> Personal [Codex CLI](https://github.com/openai/codex) configuration for academic research and software development — covering the full research lifecycle from ideation to publication.
 
-> **Note**: This is the **OpenCode edition** of Claude Scholar. For other versions:
-> - Claude Code CLI: [`main` branch](https://github.com/Galaxy-Dawn/claude-scholar/tree/main)
-> - Codex CLI (OpenAI): [`codex` branch](https://github.com/Galaxy-Dawn/claude-scholar/tree/codex) — see [INSTALL-CODEX.md](INSTALL-CODEX.md)
+> **Note**: This is the **Codex CLI edition** of Claude Scholar. For the Claude Code CLI version, see the [`main` branch](https://github.com/Galaxy-Dawn/claude-scholar/tree/main). For the **OpenCode** version, see the [`opencode` branch](https://github.com/Galaxy-Dawn/claude-scholar/tree/opencode).
 
 ## News
 
-- **2026-02-23**: Added `setup.sh` installer — safe merge into existing `~/.opencode`, auto-backup `opencode.jsonc`
-- **2026-02-22**: Added Zotero MCP server to `opencode.jsonc` — enables literature management commands (`/zotero-review`, `/zotero-notes`) out of the box
-- **2026-02-21**: OpenCode migration — ported entire configuration to OpenCode format: hooks→plugins (TypeScript), agents→opencode.jsonc, CLAUDE.md→AGENTS.md, added permission rules, file-based commands preserved
+- **2026-02-25**: Codex CLI migration — ported from OpenCode to Codex CLI format: TOML config, independent agent directories, commands merged into skills (32→40), hooks replaced by AGENTS.md instructions + sandbox, interactive `setup.sh` with merge support
+- **2026-02-23**: Added `setup.sh` installer — safe merge into existing config, auto-backup
 
 <details>
 <summary>View older changelog</summary>
 
-- **2026-02-20**: Bilingual config — translated `CLAUDE.md` to English for international readability
-- **2026-02-15**: Zotero MCP integration — added `/zotero-review` and `/zotero-notes` commands, updated `research-ideation` skill with Zotero integration guide
-- **2026-02-14**: Hooks optimization — restructured `security-guard` to two-tier system (Block + Confirm), `skill-forced-eval` now groups skills into 6 categories with silent scan mode
-- **2026-02-11**: Major update — added 10 new skills, 7 new agents, 8 research workflow commands, 2 new rules; 89 files changed
+- **2026-02-22**: Added Zotero MCP server — enables literature management out of the box
+- **2026-02-21**: OpenCode migration — hooks→plugins (TypeScript), agents→opencode.jsonc, CLAUDE.md→AGENTS.md
+- **2026-02-15**: Zotero MCP integration — added `/zotero-review` and `/zotero-notes` commands
+- **2026-02-11**: Major update — added 10 new skills, 7 new agents, 8 research workflow commands; 89 files changed
 - **2026-01-25**: Project open-sourced, v1.0.0 released
 
 </details>
 
 ## Introduction
 
-Claude Scholar (OpenCode Edition) is a configuration system for [OpenCode](https://github.com/sst/opencode) CLI, providing rich skills, commands, agents, and plugins optimized for:
+Claude Scholar (Codex Edition) is a configuration system for [Codex CLI](https://github.com/openai/codex), providing rich skills, agents, and MCP integrations optimized for:
 - **Academic Research** - Complete research lifecycle: idea generation → experimentation → results analysis → paper writing → review response → conference preparation
 - **Software Development** - Git workflows, code review, test-driven development, ML project architecture
-- **Plugin Development** - Skill, Command, Agent, Plugin development guides with quality assessment
-- **Project Management** - Planning documents, code standards, automated workflows with cross-platform plugins
+- **Project Management** - Planning documents, code standards, automated workflows via AGENTS.md instructions
 
 ## Quick Navigation
 
 | Topic | Description |
 |-------|-------------|
-| [Quick Start](#quick-start) | Get up and running in minutes |
+| [Quick Start](#quick-start) | Get up and running with setup.sh |
 | [Core Workflows](#core-workflows) | Paper writing, code organization, skill evolution |
-| [What's Included](#whats-included) | Skills, commands, agents overview |
-| [Installation Guide](#installation-options) | Full, minimal, or selective setup |
+| [What's Included](#whats-included) | Skills, agents overview |
+| [Installation Guide](#installation-options) | Full install or manual setup |
 | [MCP Setup](#mcp-server-setup-optional) | Zotero MCP for research workflows |
-| [Project Rules](#project-rules) | Coding style and agent orchestration |
+| [Migration Notes](#key-differences-from-opencode-version) | What changed from OpenCode edition |
 
 ## Core Workflows
 
@@ -133,17 +129,13 @@ End-to-end research startup from idea generation to literature management:
 
 ### Supporting Workflows
 
-#### Automated Plugin Workflow
+#### Workflow Automation
 
-Cross-platform TypeScript plugins automate workflow enforcement:
+In the Codex edition, automated workflows are handled through:
 
-- **skill-eval** (`skill-eval.ts`): Before EVERY command → scans available skills → matches relevant skills to user input → ensures no relevant skill is missed
-- **session-start** (`session-start.ts`): Session begins → displays Git status, pending todos → shows project context at a glance
-- **session-summary** (`session-summary.ts`): Session ends → generates comprehensive work log → summarizes all changes → provides smart recommendations
-- **stop-summary** (`stop-summary.ts`): Session updates → lightweight status check
-- **security-guard** (`security-guard.ts`): Before tool execution → **Block tier**: rejects catastrophic commands (rm -rf /, dd, mkfs); **Warn tier**: flags dangerous-but-legitimate operations (git push --force, git reset --hard, chmod 777)
-
-**Cross-platform**: All plugins use TypeScript, ensuring Windows/macOS/Linux compatibility.
+- **AGENTS.md instructions**: Session start protocol, skill evaluation guidance, and security rules are embedded as directives in `AGENTS.md` — Codex reads this file automatically
+- **Sandbox mode**: `sandbox_mode = "workspace-write"` provides file write restrictions and network isolation, replacing the hook-based security guard
+- **session-wrap-up** (skill): Manual trigger at session end to generate work logs and cleanup reminders — replaces the automatic session-summary hook
 
 #### Knowledge Extraction Workflow
 
@@ -158,7 +150,7 @@ skill-development → skill-quality-reviewer → skill-improver
 
 ## What's Included
 
-### Skills (32 total)
+### Skills (40 total)
 
 **Research Workflow:**
 - `research-ideation` - Research startup: 5W1H brainstorming, literature review, gap analysis
@@ -192,7 +184,6 @@ skill-development → skill-quality-reviewer → skill-improver
 - `skill-development` / `skill-improver` / `skill-quality-reviewer` - Skill lifecycle
 - `command-development` / `command-name` - Command creation
 - `agent-identifier` - Agent configuration
-- `hook-development` - Plugin development guide
 - `mcp-integration` - MCP server integration
 
 **Utilities:**
@@ -201,44 +192,35 @@ skill-development → skill-quality-reviewer → skill-improver
 - `webapp-testing` - Local web application testing
 - `kaggle-learner` - Learn from Kaggle solutions
 
-### Commands (50+)
+**Migrated from Commands (8 new):**
+- `git-commit` - Commit with Conventional Commits
+- `git-push` - Commit and push to GitHub
+- `readme-updater` - Update README documentation
+- `build-fixer` - Fix build errors
+- `checkpoint-manager` - Create checkpoints
+- `memory-updater` - Check and update AGENTS.md memory
+- `project-creator` - Create new project from template
+- `session-wrap-up` - Generate work log and cleanup reminders
 
-**Research Commands:**
+### Natural Language Triggers
 
-| Command | Purpose |
-|---------|---------|
-| `/research-init` | Launch research startup workflow (5W1H, literature review, gap analysis) |
-| `/zotero-review` | Read papers from Zotero collection, generate structured literature review |
-| `/zotero-notes` | Batch read Zotero papers, generate structured reading notes |
-| `/analyze-results` | Analyze experiment results (statistics, visualization, ablation) |
-| `/rebuttal` | Generate systematic rebuttal document from review comments |
-| `/presentation` | Create conference presentation outline |
-| `/poster` | Generate academic poster design plan |
-| `/promote` | Generate promotion content (Twitter, LinkedIn, blog) |
+Codex CLI does not have slash commands. Instead, all former commands have been merged into skills and are triggered via natural language. For example:
 
-**Development Commands:**
-
-| Command | Purpose |
-|---------|---------|
-| `/plan` | Create implementation plans |
-| `/commit` | Commit with Conventional Commits |
-| `/update-github` | Commit and push to GitHub |
-| `/update-readme` | Update README documentation |
-| `/update-memory` | Check and update AGENTS.md memory |
-| `/code-review` | Perform code review |
-| `/tdd` | Test-driven development workflow |
-| `/build-fix` | Fix build errors |
-| `/verify` | Verify changes |
-| `/checkpoint` | Create checkpoints |
-| `/refactor-clean` | Refactor and cleanup |
-| `/learn` | Extract reusable patterns |
-| `/create_project` | Create new project from template |
-| `/setup-pm` | Configure package manager (uv/pnpm) |
-| `/sc` | SuperClaude command suite (30 commands) |
+| Say this... | Triggers skill |
+|-------------|---------------|
+| "commit changes" | `git-commit` |
+| "push to GitHub" | `git-push` |
+| "review my code" | `code-review-excellence` |
+| "start research" | `research-ideation` |
+| "write rebuttal" | `review-response` |
+| "analyze results" | `results-analysis` |
+| "create a plan" | `planning-with-files` |
+| "fix build errors" | `build-fixer` |
+| "wrap up session" | `session-wrap-up` |
 
 ### Agents (14 specialized)
 
-Agents are defined in `opencode.jsonc` and invoked automatically or on demand.
+Each agent has its own directory under `~/.codex/agents/<name>/` with a `config.toml` and `AGENTS.md` (system prompt). Agents are registered in the main `config.toml` and invoked automatically or on demand.
 
 **Research Agents:**
 - **literature-reviewer** - Literature search, classification, and trend analysis
@@ -266,45 +248,27 @@ Agents are defined in `opencode.jsonc` and invoked automatically or on demand.
 <summary>View file structure</summary>
 
 ```
-claude-scholar/                  # OpenCode edition
-├── opencode.jsonc               # Core config: agents, MCP, permissions
-├── AGENTS.md                    # Project context (replaces CLAUDE.md)
-├── package.json                 # Plugin dependencies (@opencode-ai/plugin)
+claude-scholar/                  # Codex CLI edition
+├── config.toml                  # Core config: model, agents, MCP, features
+├── AGENTS.md                    # Project context + workflow instructions
 │
-├── plugins/                     # TypeScript plugins (replaces hooks/)
-│   ├── lib/
-│   │   └── common.ts                   # Shared utilities (git info, todo info)
-│   ├── session-start.ts                # Session begin - Git status, todos
-│   ├── skill-eval.ts                   # Skill matching on command execute
-│   ├── session-summary.ts              # Session end - work log generation
-│   ├── stop-summary.ts                 # Session update - status check
-│   └── security-guard.ts              # Tool execution guard (block + warn)
+├── agents/                      # 14 specialized agents
+│   ├── code-reviewer/
+│   │   ├── config.toml          # Agent-specific settings
+│   │   └── AGENTS.md            # Agent system prompt
+│   ├── architect/
+│   ├── literature-reviewer/
+│   └── ... (11 more agents)
 │
-├── skills/                      # 32 specialized skills (same as Claude Code version)
+├── skills/                      # 40 skills (32 original + 8 migrated)
 │   ├── ml-paper-writing/
-│   ├── research-ideation/
-│   ├── results-analysis/
-│   ├── review-response/
-│   ├── writing-anti-ai/
-│   ├── architecture-design/
-│   ├── git-workflow/
-│   ├── bug-detective/
-│   └── ... (24 more skills)
+│   │   └── SKILL.md
+│   ├── git-commit/              # New: migrated from /commit command
+│   ├── session-wrap-up/         # New: replaces session hooks
+│   └── ... (37 more skills)
 │
-├── commands/                    # 50+ slash commands (file-based, one .md per command)
-│   ├── research-init.md
-│   ├── zotero-review.md
-│   ├── commit.md
-│   ├── plan.md
-│   └── sc/                      # SuperClaude command suite (30 commands)
-│
-├── rules/                       # Global guidelines (merged into AGENTS.md)
-│   ├── coding-style.md
-│   ├── agents.md
-│   ├── security.md
-│   └── experiment-reproducibility.md
-│
-├── scripts/                     # Utility scripts
+├── scripts/                     # Installer and utilities
+│   ├── setup.sh                 # Interactive installer (merge support)
 │   ├── setup-package-manager.js
 │   └── lib/
 │
@@ -324,56 +288,44 @@ claude-scholar/                  # OpenCode edition
 
 #### Option 1: Full Installation (Recommended)
 
-Safe merge into existing `~/.opencode` directory — won't overwrite personal data:
+Interactive installer with merge support — detects existing `~/.codex` config and merges non-destructively:
 
 ```bash
-git clone -b opencode https://github.com/Galaxy-Dawn/claude-scholar.git /tmp/claude-scholar
+git clone -b codex https://github.com/Galaxy-Dawn/claude-scholar.git /tmp/claude-scholar
 bash /tmp/claude-scholar/scripts/setup.sh
 ```
 
-The script copies skills/commands/plugins/scripts/utils into `~/.opencode` and installs `opencode.jsonc` (auto-backup to `opencode.jsonc.bak`).
+The script will:
+- Detect existing `config.toml` and `auth.json`, ask whether to keep or reconfigure
+- Choose API provider (OpenAI or custom) and model
+- Merge Scholar-specific sections (features, agents, MCP) into existing config
+- Copy skills, agents, scripts, and utils to `~/.codex/`
 
-**Includes**: All 32 skills, 50+ commands, 14 agents, 5 plugins, and project rules.
+**Includes**: All 40 skills, 14 agents, Zotero MCP config, and AGENTS.md.
 
-#### Option 2: Minimal Installation
+#### Option 2: Manual Installation
 
-Core plugins and essential skills only:
+Copy only what you need:
 
 ```bash
-git clone -b opencode https://github.com/Galaxy-Dawn/claude-scholar.git /tmp/claude-scholar
+git clone -b codex https://github.com/Galaxy-Dawn/claude-scholar.git /tmp/claude-scholar
 
-mkdir -p ~/.opencode/plugins/lib ~/.opencode/skills
-cp /tmp/claude-scholar/plugins/*.ts ~/.opencode/plugins/
-cp /tmp/claude-scholar/plugins/lib/common.ts ~/.opencode/plugins/lib/
-cp /tmp/claude-scholar/opencode.jsonc ~/.opencode/
-cp /tmp/claude-scholar/package.json ~/.opencode/
-cp -r /tmp/claude-scholar/skills/ml-paper-writing ~/.opencode/skills/
-cp -r /tmp/claude-scholar/skills/research-ideation ~/.opencode/skills/
-cp -r /tmp/claude-scholar/skills/results-analysis ~/.opencode/skills/
-cp -r /tmp/claude-scholar/skills/git-workflow ~/.opencode/skills/
+mkdir -p ~/.codex/skills ~/.codex/agents
+cp /tmp/claude-scholar/config.toml ~/.codex/
+cp /tmp/claude-scholar/AGENTS.md ~/.codex/
+cp -r /tmp/claude-scholar/skills/ml-paper-writing ~/.codex/skills/
+cp -r /tmp/claude-scholar/skills/research-ideation ~/.codex/skills/
+cp -r /tmp/claude-scholar/skills/git-workflow ~/.codex/skills/
+cp -r /tmp/claude-scholar/agents/code-reviewer ~/.codex/agents/
 
 rm -rf /tmp/claude-scholar
 ```
 
-**Post-install**: If you already had `opencode.jsonc`, back it up first — this overwrites it with the full agent/mcp/permission config.
-
-#### Option 3: Selective Installation
-
-```bash
-git clone -b opencode https://github.com/Galaxy-Dawn/claude-scholar.git /tmp/claude-scholar
-
-# Copy what you need:
-cp /tmp/claude-scholar/opencode.jsonc ~/.opencode/
-cp /tmp/claude-scholar/plugins/*.ts ~/.opencode/plugins/
-cp -r /tmp/claude-scholar/skills/architecture-design ~/.opencode/skills/
-cp -r /tmp/claude-scholar/commands/commit.md ~/.opencode/commands/
-```
-
-**Post-install**: Back up your existing `opencode.jsonc` before copying.
+**Note**: You'll need to manually edit `~/.codex/config.toml` to set your model, provider, and register the agents/skills you copied.
 
 ### Requirements
 
-- [OpenCode](https://github.com/sst/opencode) CLI
+- [Codex CLI](https://github.com/openai/codex) (`npm i -g @openai/codex`)
 - Git
 - (Optional) uv, Python (for Python development)
 - (Optional) [Zotero](https://www.zotero.org/) + [zotero-mcp-server](https://pypi.org/project/zotero-mcp-server/) (for literature management)
@@ -390,46 +342,45 @@ uv tool install zotero-mcp-server
 # Edit → Settings → Advanced → Check "Allow other applications on this computer to communicate with Zotero"
 ```
 
-The Zotero MCP server is already configured in `opencode.jsonc`. If you installed via Option 1 (Full Installation), it works out of the box.
+The Zotero MCP server is pre-configured in `config.toml`. If you used `setup.sh`, enable it during installation or later by setting `enabled = true`:
 
-For selective installations, ensure your `opencode.jsonc` includes:
-
-```jsonc
-"mcp": {
-  "zotero": {
-    "type": "local",
-    "command": ["zotero-mcp", "serve"],
-    "enabled": true
-  }
-}
+```toml
+[mcp_servers.zotero]
+command = "zotero-mcp"
+args = ["serve"]
+enabled = true
+[mcp_servers.zotero.env]
+ZOTERO_LOCAL = "true"
 ```
 
 ### First Run
 
-After installation, the plugins provide automated workflow assistance:
+After installation, run `codex` to start. The Codex CLI will:
 
-1. **Every command** triggers `skill-eval` → ensures applicable skills are considered
-2. **Session starts** with `session-start` → displays project context
-3. **Sessions end** with `session-summary` → generates work log with recommendations
-4. **Tool execution** guarded by `security-guard` → blocks dangerous commands
+1. Read `AGENTS.md` for project context and workflow instructions
+2. Scan `~/.codex/skills/` for available skills (triggered via natural language)
+3. Use registered agents from `config.toml` for specialized tasks
+4. Enforce `sandbox_mode = "workspace-write"` for file safety
 
-## Key Differences from Claude Code Version
+## Key Differences from OpenCode Version
 
-| Aspect | Claude Code (`main` branch) | OpenCode (`opencode` branch) |
-|--------|---------------------------|------------------------------|
-| Config file | `CLAUDE.md` | `AGENTS.md` + `opencode.jsonc` |
-| Hooks | JavaScript (`hooks/*.js`) | TypeScript plugins (`plugins/*.ts`) |
-| Agents | Markdown files (`agents/*.md`) | JSON config in `opencode.jsonc` |
-| Permissions | Hook-based (`security-guard.js`) | `opencode.jsonc` permission rules + plugin |
-| MCP | `settings.json` | `opencode.jsonc` mcp section |
-| Skills | Same format | Same format (compatible) |
-| Commands | Same format | Same format (file-based `.md`) |
+| Aspect | OpenCode (`opencode` branch) | Codex CLI (`codex` branch) |
+|--------|------------------------------|---------------------------|
+| Config file | `opencode.jsonc` (JSON) | `config.toml` (TOML) |
+| Hooks/Plugins | TypeScript plugins (`plugins/*.ts`) | None — replaced by AGENTS.md instructions + sandbox |
+| Agents | JSON config in `opencode.jsonc` | Individual directories (`agents/<name>/config.toml + AGENTS.md`) |
+| Commands | File-based `.md` (50+) | Merged into skills (natural language triggers) |
+| Skills | 32 skills | 40 skills (8 migrated from commands) |
+| Security | `security-guard.ts` plugin | `sandbox_mode = "workspace-write"` + AGENTS.md rules |
+| MCP | `opencode.jsonc` mcp section | `config.toml` `[mcp_servers]` section |
+| Dependencies | `package.json` (npm) | None — no npm dependencies |
 
 ## Project Rules
 
+All rules from the Claude Code version have been merged into `AGENTS.md` as inline directives.
+
 ### Coding Style
 
-Enforced by `rules/coding-style.md`:
 - **File Size**: 200-400 lines maximum
 - **Immutability**: Use `@dataclass(frozen=True)` for configs
 - **Type Hints**: Required for all functions
@@ -438,21 +389,21 @@ Enforced by `rules/coding-style.md`:
 
 ### Agent Orchestration
 
-Defined in `rules/agents.md`:
+Defined in `AGENTS.md`:
 - Available agent types and purposes
 - Parallel task execution
 - Multi-perspective analysis
 
 ### Security
 
-Defined in `rules/security.md` + `opencode.jsonc` permission rules:
+Enforced by Codex sandbox + `AGENTS.md` rules:
+- `sandbox_mode = "workspace-write"` restricts file writes and network access
 - Secrets management (environment variables, `.env` files)
 - Sensitive file protection (never commit tokens, keys, credentials)
-- Tool execution guard via `security-guard.ts` plugin
 
 ### Experiment Reproducibility
 
-Defined in `rules/experiment-reproducibility.md`:
+Defined in `AGENTS.md`:
 - Random seed management for reproducibility
 - Configuration recording (Hydra auto-save)
 - Environment recording and checkpoint management
@@ -470,7 +421,7 @@ MIT License
 
 ## Acknowledgments
 
-Built with [OpenCode](https://github.com/sst/opencode) CLI and enhanced by the open-source community.
+Built with [Codex CLI](https://github.com/openai/codex) and enhanced by the open-source community.
 
 ### References
 
