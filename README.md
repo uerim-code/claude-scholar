@@ -307,7 +307,7 @@ claude-scholar/                  # OpenCode edition
 ├── utils/                       # Python utilities
 │   └── platform_utils.py
 │
-├── LOGO.jpeg
+├── LOGO.png
 ├── README.md                    # This file
 └── README.zh-CN.md              # Chinese version
 ```

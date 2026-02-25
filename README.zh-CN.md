@@ -266,7 +266,7 @@ claude-scholar/                  # OpenCode 版
 ├── rules/                       # 全局指导原则（已合并到 AGENTS.md）
 ├── scripts/                     # 工具脚本
 ├── utils/                       # Python 工具
-├── LOGO.jpeg
+├── LOGO.png
 ├── README.md
 └── README.zh-CN.md
 ```
