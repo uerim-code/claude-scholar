@@ -18,7 +18,7 @@
 
 ## News
 
-- **2026-02-26**: **Zotero MCP Web API 模式** — 支持远程访问，可通过 DOI/arXiv ID/URL 导入论文，进行集合管理、条目更新，安全删除；附 [Claude Code](./MCP_SETUP.zh-CN.md)、[Codex CLI](./MCP_SETUP.zh-CN.md#codex-cli)、[OpenCode](./MCP_SETUP.zh-CN.md#opencode) 三平台配置指南
+- **2026-02-26**: **Zotero MCP Web/写操作工作流** — 支持远程访问，可通过 DOI/arXiv ID/URL 导入论文，进行集合管理、条目更新和安全删除；附 [Claude Code](./MCP_SETUP.zh-CN.md)、[Codex CLI](./MCP_SETUP.zh-CN.md#codex-cli)、[OpenCode](./MCP_SETUP.zh-CN.md#opencode) 三平台配置指南
 - **2026-02-25**: **Codex CLI** 支持 — 新增 `codex` 分支，支持 [OpenAI Codex CLI](https://github.com/openai/codex)，包含 config.toml、40 个 skills、14 个 agents 和 sandbox 安全机制
 - **2026-02-23**: 新增 `setup.sh` 安装脚本 — 安全合并到已有 `~/.claude`，自动备份 `settings.json`，智能合并 hooks/mcpServers/plugins
 - **2026-02-21**: **OpenCode** 支持 — Claude Scholar 现已支持 [OpenCode](https://github.com/opencode-ai/opencode) 作为替代 CLI；切换到 `opencode` 分支获取兼容配置
@@ -545,9 +545,11 @@ cp rules/agents.md ~/.claude/rules/
 如需使用 Zotero 集成的研究工作流，请安装 MCP 服务器：
 
 ```bash
-# 从 Galaxy-Dawn fork 安装（Web API 模式）
+# 从 Galaxy-Dawn fork 安装
 uv tool install git+https://github.com/Galaxy-Dawn/zotero-mcp.git
 ```
+
+如需使用 Web API / 写操作，请打开 [Zotero 设置 -> Security -> Applications](https://www.zotero.org/settings/security#applications)，创建 private key，并将页面显示的数字 `User ID` 作为个人库的 `ZOTERO_LIBRARY_ID`。
 
 然后在 `~/.claude/settings.json` 中添加：
 
@@ -559,7 +561,7 @@ uv tool install git+https://github.com/Galaxy-Dawn/zotero-mcp.git
       "args": ["serve"],
       "env": {
         "ZOTERO_API_KEY": "your-api-key",
-        "ZOTERO_LIBRARY_ID": "your-library-id",
+        "ZOTERO_LIBRARY_ID": "your-user-id",
         "ZOTERO_LIBRARY_TYPE": "user",
         "UNPAYWALL_EMAIL": "your-email@example.com",
         "UNSAFE_OPERATIONS": "all"
