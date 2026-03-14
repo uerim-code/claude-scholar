@@ -20,7 +20,7 @@
 
 ## News
 
-- **2026-02-26**: Zotero MCP Web API 模式 — 从本地模式切换到 Web API 模式（[Galaxy-Dawn/zotero-mcp](https://github.com/Galaxy-Dawn/zotero-mcp)），支持远程访问无需 Zotero 桌面应用；新增 `MCP_SETUP.md` 配置指南
+- **2026-02-26**: Zotero MCP Web/写操作工作流 — 支持远程访问，可通过 DOI/arXiv ID/URL 导入论文，进行集合管理、条目更新和安全删除；详见 `MCP_SETUP.md` 配置指南
 - **2026-02-25**: Codex CLI 迁移 — 从 OpenCode 迁移到 Codex CLI 格式：TOML 配置、独立 agent 目录、commands 合并入 skills（32→40）、hooks 替换为 AGENTS.md 指令 + sandbox、交互式 `setup.sh` 支持增量合并
 - **2026-02-23**: 新增 `setup.sh` 安装脚本 — 安全合并到已有配置，自动备份
 
@@ -319,11 +319,11 @@ rm -rf /tmp/claude-scholar
 如需使用 Zotero 集成的研究工作流，请安装 MCP 服务器：
 
 ```bash
-# 安装 Zotero MCP 服务器（Web API 模式 — 无需 Zotero 桌面应用）
+# 安装 Zotero MCP 服务器
 uv tool install git+https://github.com/Galaxy-Dawn/zotero-mcp.git
 ```
 
-从 [zotero.org/settings/keys](https://www.zotero.org/settings/keys) 获取 API 密钥和库 ID，然后在 `config.toml` 中配置：
+如需使用 Web API / 写操作，请打开 [Zotero 设置 -> Security -> Applications](https://www.zotero.org/settings/security#applications)，创建 private key，并将页面显示的数字 `User ID` 作为个人库的 `ZOTERO_LIBRARY_ID`。然后在 `config.toml` 中配置：
 
 ```toml
 [mcp_servers.zotero]
@@ -333,7 +333,7 @@ enabled = true
 
 [mcp_servers.zotero.env]
 ZOTERO_API_KEY = "your-api-key"
-ZOTERO_LIBRARY_ID = "your-library-id"
+ZOTERO_LIBRARY_ID = "your-user-id"
 ZOTERO_LIBRARY_TYPE = "user"
 UNPAYWALL_EMAIL = "your-email@example.com"
 UNSAFE_OPERATIONS = "all"

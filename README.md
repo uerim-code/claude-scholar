@@ -20,7 +20,7 @@
 
 ## News
 
-- **2026-02-26**: Zotero MCP Web API mode — switched from local-only to Web API mode ([Galaxy-Dawn/zotero-mcp](https://github.com/Galaxy-Dawn/zotero-mcp)), supports remote access without Zotero desktop app; added `MCP_SETUP.md` setup guide
+- **2026-02-26**: Zotero MCP Web/write workflow — supports remote access, paper import via DOI/arXiv ID/URL, collection management, item updates, and safe deletion; see `MCP_SETUP.md` for setup details
 - **2026-02-25**: Codex CLI migration — ported from OpenCode to Codex CLI format: TOML config, independent agent directories, commands merged into skills (32→40), hooks replaced by AGENTS.md instructions + sandbox, interactive `setup.sh` with merge support
 - **2026-02-23**: Added `setup.sh` installer — safe merge into existing config, auto-backup
 
@@ -336,11 +336,11 @@ rm -rf /tmp/claude-scholar
 For Zotero-integrated research workflows, install the MCP server:
 
 ```bash
-# Install Zotero MCP server (Web API mode — no Zotero desktop app required)
+# Install Zotero MCP server
 uv tool install git+https://github.com/Galaxy-Dawn/zotero-mcp.git
 ```
 
-Get your API key and library ID from [zotero.org/settings/keys](https://www.zotero.org/settings/keys), then configure in `config.toml`:
+For Web/write tools, open [Zotero Settings -> Security -> Applications](https://www.zotero.org/settings/security#applications), create a private key, and use the numeric `User ID` shown on that page as `ZOTERO_LIBRARY_ID` for a personal library. Then configure `config.toml`:
 
 ```toml
 [mcp_servers.zotero]
@@ -350,7 +350,7 @@ enabled = true
 
 [mcp_servers.zotero.env]
 ZOTERO_API_KEY = "your-api-key"
-ZOTERO_LIBRARY_ID = "your-library-id"
+ZOTERO_LIBRARY_ID = "your-user-id"
 ZOTERO_LIBRARY_TYPE = "user"
 UNPAYWALL_EMAIL = "your-email@example.com"
 UNSAFE_OPERATIONS = "all"
