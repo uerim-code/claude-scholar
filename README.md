@@ -18,6 +18,7 @@
 
 ## News
 
+- **2026-03-18**: **Results reporting workflow** — refocused `results-analysis` on strict statistics, real scientific figures, `stats-appendix` / `figure-catalog`, added the new `results-report` skill for post-experiment summary reports, and integrated internal experiment reports into Obsidian `Results/Reports/` with stable naming
 - **2026-03-17**: **Obsidian project knowledge base** — built-in official Obsidian skills + filesystem-first project import, conservative repo-bound auto-sync, default `Maps/literature.canvas`, optional `.base` views, and detach/archive/purge lifecycle (no MCP needed)
 - **2026-02-26**: **Zotero MCP Web API mode** — remote access, import papers via DOI/arXiv ID/URL, collection management, item updates, safe deletion; config guides for [Claude Code](./MCP_SETUP.md), [Codex CLI](./MCP_SETUP.md#codex-cli), [OpenCode](./MCP_SETUP.md#opencode)
 - **2026-02-25**: **Codex CLI** support — added `codex` branch supporting [OpenAI Codex CLI](https://github.com/openai/codex) with config.toml, 40 skills, 14 agents, and sandbox security

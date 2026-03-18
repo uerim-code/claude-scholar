@@ -18,6 +18,7 @@
 
 ## News
 
+- **2026-03-18**: **实验结果报告工作流** — 将 `results-analysis` 重构为严格统计分析与真实科研绘图工作流，新增 `stats-appendix` / `figure-catalog` 产物；新增 `results-report` skill 负责实验后总结报告，并将内部实验报告接入 Obsidian `Results/Reports/` 与稳定命名规范
 - **2026-03-17**: **Obsidian 项目知识库** — 内置官方 Obsidian skills + filesystem-first 项目导入，支持保守的已绑定仓库自动同步、默认 `Maps/literature.canvas`、显式触发的 `.base` 视图，以及 detach/archive/purge 生命周期（不需要 MCP）
 - **2026-02-26**: **Zotero MCP Web API 模式** — 支持远程访问，可通过 DOI/arXiv ID/URL 导入论文，进行集合管理、条目更新，安全删除；附 [Claude Code](./MCP_SETUP.zh-CN.md)、[Codex CLI](./MCP_SETUP.zh-CN.md#codex-cli)、[OpenCode](./MCP_SETUP.zh-CN.md#opencode) 三平台配置指南
 - **2026-02-25**: **Codex CLI** 支持 — 新增 `codex` 分支，支持 [OpenAI Codex CLI](https://github.com/openai/codex)，包含 config.toml、40 个 skills、14 个 agents 和 sandbox 安全机制
