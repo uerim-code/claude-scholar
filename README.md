@@ -80,6 +80,13 @@ In other words, Claude Scholar is a **semi-automated research assistant**, not a
 
 ## Quick Start
 
+### Requirements
+
+- [Codex CLI](https://github.com/openai/codex)
+- Git
+- (Optional) Python + [uv](https://docs.astral.sh/uv/) for Python development
+- (Optional) [Zotero](https://www.zotero.org/) + [Galaxy-Dawn/zotero-mcp](https://github.com/Galaxy-Dawn/zotero-mcp) for literature workflows
+
 ### Option 1: Full Installation (Recommended)
 
 ```bash
@@ -135,7 +142,6 @@ cp /tmp/claude-scholar/AGENTS.md ~/.codex/AGENTS.md
 **Important Codex note**:
 - Codex does **not** show custom skills in `/...` menus.
 - Use natural language prompts, or explicitly invoke a skill as `$skill-name` when needed.
-- Keep a repo-local `AGENTS.md` in the workspace where you actually run Codex.
 
 ## Platform Scope
 
@@ -377,7 +383,6 @@ Claude Scholar also includes a self-improvement loop for its own skills.
 
 ## Documentation
 
-- [INSTALL-CODEX.md](./INSTALL-CODEX.md) — Codex-specific installation guide
 - [MCP_SETUP.md](./MCP_SETUP.md) — Zotero MCP setup for Codex
 - [OBSIDIAN_SETUP.md](./OBSIDIAN_SETUP.md) — Obsidian project knowledge base workflow
 - [AGENTS.md](./AGENTS.md) — Codex session rules, safety discipline, and workflow instructions
