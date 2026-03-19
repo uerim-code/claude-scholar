@@ -280,9 +280,9 @@ bash /tmp/claude-scholar/scripts/setup.sh
 ```
 
 脚本会：
-- 检测已有的 `config.toml` 和 `auth.json`，询问是否保留或重新配置
-- 选择 API 提供商（OpenAI 或自定义）和模型
-- 将 Scholar 特有部分（features、agents、MCP）合并到已有配置
+- 静默保留已有 `config.toml` 中的 provider/model，以及现有 `auth.json` 凭据；若缺少 `auth.json`，还会自动探测常见 `*_API_KEY` env
+- 对 fresh install，选择 API provider（OpenAI 或自定义）、模型，以及自定义 API key env var 名
+- 若环境里已导出对应 env var，则直接复用，再把 Scholar 特有部分（features、agents、MCP）合并进配置
 - 将 skills、agents、scripts、utils 复制到 `~/.codex/`
 
 **包含**：所有 40 个技能、14 个代理、Zotero MCP 配置和 AGENTS.md。
