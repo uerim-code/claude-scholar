@@ -6,6 +6,7 @@
 2. If the repo is already bound, stop and reuse the existing project.
 3. If the repo is not research-like, stop and ask for confirmation instead of forcing bootstrap.
 4. If `OBSIDIAN_VAULT_PATH` is missing, request it explicitly.
+5. In Codex, resolve `project_kb.py` from `${CODEX_HOME:-$HOME/.codex}/skills/...` or from a checked-out Claude Scholar repo; do not assume `${CLAUDE_PLUGIN_ROOT}` exists.
 
 ## Common failure modes
 
@@ -17,8 +18,8 @@
 ## Post-bootstrap verification
 
 Check for these minimum artifacts:
-- `.claude/project-memory/registry.yaml`
-- `.claude/project-memory/<project_id>.md`
+- `.codex/project-memory/registry.yaml`
+- `.codex/project-memory/<project_id>.md`
 - `Research/{project-slug}/00-Hub.md`
 - `Research/{project-slug}/01-Plan.md`
 - `Research/{project-slug}/Knowledge/Source-Inventory.md`

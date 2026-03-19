@@ -22,5 +22,8 @@ Refresh the markdown map only when:
 ## Recommended command
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/obsidian-literature-workflow/scripts/build_literature_graph.py" --cwd "$PWD"
+LITERATURE_GRAPH_SCRIPT="${CODEX_HOME:-$HOME/.codex}/skills/obsidian-literature-workflow/scripts/build_literature_graph.py"
+python3 "$LITERATURE_GRAPH_SCRIPT" --cwd "$PWD"
 ```
+
+If the installed Codex skill path does not exist, point `LITERATURE_GRAPH_SCRIPT` at the checked-out Claude Scholar repo explicitly. Do not assume `${CLAUDE_PLUGIN_ROOT}` exists in Codex.

@@ -26,7 +26,6 @@ sandbox_mode = "workspace-write"
 [features]
 multi_agent = true
 memories = true
-skill_approval = true
 
 # ============================================================
 # MCP Servers (optional, enable after installing zotero-mcp)

@@ -72,7 +72,8 @@ Add to your `~/.claude/settings.json`:
         "ZOTERO_LIBRARY_ID": "your-user-id",
         "ZOTERO_LIBRARY_TYPE": "user",
         "UNPAYWALL_EMAIL": "your-email@example.com",
-        "UNSAFE_OPERATIONS": "all"
+        "UNSAFE_OPERATIONS": "all",
+        "NO_PROXY": "localhost,127.0.0.1"
       }
     }
   }

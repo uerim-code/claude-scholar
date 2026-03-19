@@ -34,8 +34,11 @@ Refresh the literature canvas when:
 ## Recommended command
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/obsidian-literature-workflow/scripts/build_literature_canvas.py" --cwd "$PWD"
+LITERATURE_CANVAS_SCRIPT="${CODEX_HOME:-$HOME/.codex}/skills/obsidian-literature-workflow/scripts/build_literature_canvas.py"
+python3 "$LITERATURE_CANVAS_SCRIPT" --cwd "$PWD"
 ```
+
+If the installed Codex skill path does not exist, point `LITERATURE_CANVAS_SCRIPT` at the checked-out Claude Scholar repo explicitly. Do not assume `${CLAUDE_PLUGIN_ROOT}` exists in Codex.
 
 ## Display rule
 

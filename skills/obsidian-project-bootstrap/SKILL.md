@@ -25,20 +25,39 @@ Resolve the vault path from one of:
 1. explicit user input,
 2. `OBSIDIAN_VAULT_PATH`.
 
+## Codex-native script path rule
+
+Codex does **not** provide `${CLAUDE_PLUGIN_ROOT}`.
+
+Resolve `project_kb.py` from one of these locations instead:
+
+1. installed Codex skill tree:
+   ```bash
+   ${CODEX_HOME:-$HOME/.codex}/skills/obsidian-project-memory/scripts/project_kb.py
+   ```
+2. a checked-out Claude Scholar repository:
+   ```bash
+   <claude-scholar-repo>/skills/obsidian-project-memory/scripts/project_kb.py
+   ```
+
+If you are running inside a normal research repo rather than inside the Claude Scholar repo itself, prefer the installed Codex path.
+
 ## Procedure
 
 1. Identify the repository root.
 2. Run a preflight detect step first:
    ```bash
-   python3 "${CLAUDE_PLUGIN_ROOT}/skills/obsidian-project-memory/scripts/project_kb.py" detect --cwd "$PWD"
+   PROJECT_KB_SCRIPT="${CODEX_HOME:-$HOME/.codex}/skills/obsidian-project-memory/scripts/project_kb.py"
+   python3 "$PROJECT_KB_SCRIPT" detect --cwd "$PWD"
    ```
 3. Only if the repo is unbound and should be imported, run bootstrap:
    ```bash
-   python3 "${CLAUDE_PLUGIN_ROOT}/skills/obsidian-project-memory/scripts/project_kb.py" bootstrap --cwd "$PWD" --vault-path "$OBSIDIAN_VAULT_PATH"
+   PROJECT_KB_SCRIPT="${CODEX_HOME:-$HOME/.codex}/skills/obsidian-project-memory/scripts/project_kb.py"
+   python3 "$PROJECT_KB_SCRIPT" bootstrap --cwd "$PWD" --vault-path "$OBSIDIAN_VAULT_PATH"
    ```
 4. Verify that bootstrap created at least:
-   - `.claude/project-memory/registry.yaml`
-   - `.claude/project-memory/<project_id>.md`
+   - `.codex/project-memory/registry.yaml`
+   - `.codex/project-memory/<project_id>.md`
    - `Research/{project-slug}/00-Hub.md`
    - `Research/{project-slug}/01-Plan.md`
    - `Research/{project-slug}/Knowledge/Source-Inventory.md`
@@ -55,6 +74,7 @@ Resolve the vault path from one of:
 - Ignore `.git`, `.venv`, `node_modules`, caches, checkpoints, binaries, and other heavy artifacts.
 - The default vault is compact: `00-Hub.md`, `01-Plan.md`, `Knowledge/`, `Papers/`, `Experiments/`, `Results/`, `Writing/`, `Daily/`, `Archive/`.
 - If `python3` is unavailable in the current shell, use the system Python interpreter that can run `project_kb.py` and say so explicitly.
+- If the installed Codex path does not exist, point `PROJECT_KB_SCRIPT` at the checked-out Claude Scholar repo explicitly rather than using `${CLAUDE_PLUGIN_ROOT}`.
 
 ## References
 
