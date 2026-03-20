@@ -147,7 +147,7 @@ function setProject(pmName) {
   try {
     setProjectPackageManager(pmName);
     console.log(`\n✓ Project preference set to: ${pmName}`);
-    console.log('  Saved to: .claude/package-manager.json');
+    console.log('  Saved to: .opencode/package-manager.json');
     console.log('');
   } catch (err) {
     console.error(`Error: ${err.message}`);

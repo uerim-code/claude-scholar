@@ -1,20 +1,70 @@
 ---
 name: analyze-results
-description: Analyze experimental results and generate statistical analysis for paper writing. Triggers data-analyst agent to perform comprehensive analysis following academic standards.
+description: Run the full post-experiment workflow in one command: strict statistical analysis, real scientific figures, and a decision-oriented results report. Uses results-analysis + results-report as a two-stage workflow.
 args:
   - name: data_path
-    description: Path to experimental results (CSV, JSON, or directory)
+    description: Path to experimental results (CSV, JSON, logs, or directory)
     required: false
   - name: analysis_type
     description: Type of analysis (full, comparison, ablation, visualization)
     required: false
     default: full
-tags: [Research, Analysis, Statistics, Paper Writing]
+  - name: purpose
+    description: Optional report purpose slug (e.g. transfer-summary, ablation-report)
+    required: false
+    default: auto
+  - name: round
+    description: Optional experiment round number for report naming
+    required: false
+  - name: experiment_line
+    description: Optional experiment line slug for report naming
+    required: false
+tags: [Research, Analysis, Statistics, Visualization, Reporting]
 ---
 
 # Analyze Results Command
 
-快速启动实验结果分析工作流，生成论文级的统计分析和可视化。
+一键执行**实验后分析 + 报告成稿**工作流。
+
+这是用户默认应该使用的入口。
+
+如果你只是想“跑严格统计和科研图，不写总结报告”，才单独走 `results-analysis`。
+
+## 目标
+
+此命令负责把一次实验结果处理成两层产物：
+
+### Phase 1: strict analysis bundle
+- 严格统计分析
+- 真实科研图
+- figure interpretation checklist
+- 可追溯的统计附录
+
+### Phase 2: complete results report
+- 完整实验总结报告
+- 逐图解释与结论串联
+- 面向决策的 next actions
+- 并默认写回本地 `Results/Reports/` 目录
+
+换句话说，`/analyze-results` 不只是“分析”，而是：
+
+> **先做 evidence-first analysis，再基于证据生成完整实验报告。**
+
+## 默认编排
+
+命令默认按以下顺序执行：
+
+1. **定位输入**
+   - 找到实验目录、CSV/JSON、日志、图表原料与比较对象
+2. **Phase 1 严格分析**
+   - 使用 `results-analysis`
+3. **Phase 2 完整报告**
+   - 使用 `results-report`
+   - 基于 Phase 1 产物写出完整实验总结报告
+4. **本地报告写回**
+   - 默认写回 `Results/Reports/`，并在需要时更新 repo 内已有的 `Experiments/` / `Results/` 索引
+5. **显式报告 blocker**
+   - 若统计输入不足、无法画图或命名信息缺失，必须说明阻塞点，不能伪造结论
 
 ## 使用方法
 
@@ -24,110 +74,108 @@ tags: [Research, Analysis, Statistics, Paper Writing]
 /analyze-results
 ```
 
-交互式模式，会询问数据位置和分析类型。
-
-### 指定数据路径
+### 指定实验目录
 
 ```bash
-/analyze-results path/to/results.csv
+/analyze-results path/to/experiment_dir
 ```
-
-分析指定的实验结果文件。
 
 ### 指定分析类型
 
 ```bash
-/analyze-results path/to/results/ comparison
+/analyze-results path/to/results comparison
 ```
 
-对指定目录中的结果进行模型对比分析。
+### 指定报告用途与轮次
+
+```bash
+/analyze-results path/to/results full transfer-summary 3 freezing
+```
+
+## 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `data_path` | 实验结果路径，可为目录、CSV、JSON 或日志 |
+| `analysis_type` | `full` / `comparison` / `ablation` / `visualization` |
+| `purpose` | 报告用途 slug；默认自动推断，无法推断时需显式说明 |
+| `round` | 实验轮次；用于报告命名，未知时允许暂用 `r00` 并注明 |
+| `experiment_line` | 实验线 slug，如 `freezing`、`contrastive-adversarial` |
 
 ## 分析类型
 
-| 类型 | 说明 | 输出 |
-|------|------|------|
-| `full` | 完整分析（默认） | 统计分析 + 可视化 + Results 草稿 |
-| `comparison` | 模型对比 | 性能对比 + 显著性检验 |
-| `ablation` | 消融实验 | 组件贡献分析 |
-| `visualization` | 可视化生成 | 论文级图表规格 |
+| 类型 | 说明 | Phase 1 重点 | Phase 2 重点 |
+|------|------|--------------|--------------|
+| `full` | 完整严格分析（默认） | 完整统计 + 主图 + supporting figure | 完整实验总结报告 |
+| `comparison` | 模型对比 | 显著性检验 + effect size + 主对比图 | 哪个方案更值得继续 |
+| `ablation` | 消融实验 | 组件贡献分析 + 稳定性分析 | 哪个组件真正改变了结果 |
+| `visualization` | 图表优先 | 高质量科研图 + 图表解释 | 图驱动的结果复盘 |
 
-## 工作流程
+## 输出产物
 
-1. **数据定位** - 找到实验结果文件
-2. **数据验证** - 检查数据完整性和格式
-3. **统计分析** - 执行预检验和假设检验
-4. **生成报告** - 创建分析报告和 Results 草稿
-5. **可视化规格** - 提供图表生成规格
+### Phase 1 输出
 
-## 输出文件
-
-命令执行后会生成以下文件：
-
-```
+```text
 analysis-output/
-├── analysis-report.md          # 分析报告（统计摘要、关键发现）
-├── results-draft.md            # Results 部分草稿（可直接用于论文）
-└── visualization-specs.md      # 可视化规格（图表详细说明）
+├── analysis-report.md
+├── stats-appendix.md
+├── figure-catalog.md
+└── figures/
 ```
 
-## 示例
+### Phase 2 输出
 
-### 示例 1：分析单个实验结果
-
-```bash
-/analyze-results experiments/model_performance.csv
+```text
+Results/Reports/
+└── YYYY-MM-DD--{experiment-line}--r{round}--{purpose}.md
 ```
 
-**输出**：
-- 基础统计量（均值、标准差、置信区间）
-- 与基线的对比分析
-- 统计显著性检验结果
-- 论文 Results 部分草稿
+报告标题默认遵循：
 
-### 示例 2：对比多个模型
-
-```bash
-/analyze-results experiments/comparison/ comparison
+```text
+{Experiment Line} / Round {N} / {Purpose} / {YYYY-MM-DD}
 ```
 
-**输出**：
-- 多模型性能对比表
-- 统计显著性检验（t-test, ANOVA）
-- 效应量分析（Cohen's d, η²）
-- 对比可视化规格
+## 执行规则
 
-### 示例 3：消融实验分析
+### 统计与图表
+- 必须优先生成真实科研图，而不是只写 visualization specs
+- 必须报告样本单位、seed/run 数、`95% CI`、effect size、multiple-comparison handling
+- 假设不满足时必须改用 non-parametric fallback 或显式说明不能做强推断
 
-```bash
-/analyze-results experiments/ablation/ ablation
-```
+### 报告生成
+- 报告必须基于 Phase 1 的真实证据，而不是凭印象总结
+- 报告必须覆盖：main findings、statistical validation、figure-by-figure interpretation、negative results、next actions
+- 报告默认是**内部实验总结报告**，不是论文 `Results` section
 
-**输出**：
-- 各组件贡献分析
-- 性能下降量化
-- 消融实验表格
-- 组件重要性排序
+### 本地知识沉淀
+默认至少执行：
+- 新建/更新 `Results/Reports/{report-name}.md`
+- 若 repo 内已有 `Experiments/` 或 `Results/` note，则补充回链或索引
+- 明确写出本轮的 blocker、限制和下一步
 
-## 集成说明
+## 何时不用这个命令
 
-此命令触发 **data-analyst agent**，该 agent 会：
-1. 使用 **results-analysis skill** 的方法论
-2. 遵循学术写作标准
-3. 确保统计正确性和可重现性
-4. 生成论文级的输出
+以下场景不必默认使用 `/analyze-results`：
 
-## 注意事项
+1. **你只要统计和图，不要实验总结报告**
+   - 直接用 `results-analysis` 生成 Phase 1 strict analysis bundle
+2. **你已经有 analysis bundle，只差最终报告**
+   - 直接用 `results-report`
+3. **你要写论文 Results section**
+   - 不应由本命令直接替代 manuscript writing workflow
 
-- 确保实验结果包含完整的统计信息（多次运行、随机种子）
-- 数据格式应清晰标注（列名、单位、指标方向）
-- 对于大型数据集，分析可能需要较长时间
-- 生成的 Results 草稿需要人工审核和调整
+## 集成关系
 
-## 相关资源
+- **Primary user entrypoint**: `/analyze-results`
+- **Phase 1 skill**: `results-analysis`
+- **Phase 2 skill**: `results-report`
 
-- **Skill**: `results-analysis` - 详细的分析方法论
-- **Agent**: `data-analyst` - 执行分析的专门 agent
-- **References**:
-  - `references/statistical-methods.md` - 统计方法指南
-  - `references/results-writing-guide.md` - Results 写作规范
-  - `references/visualization-best-practices.md` - 可视化最佳实践
+## 成功标准
+
+完成后至少应满足：
+- 有 strict analysis bundle
+- 有命名规范正确的 results report
+- 图表与文字解释一致
+- blocker 与限制被明确写出
+- 本地 `Results/Reports/` 已生成且内容可追溯

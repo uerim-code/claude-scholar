@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-**OpenCode Scholar** - 面向学术研究和软件开发的个人配置系统
+**OpenCode Scholar** - 面向学术研究和软件开发的 semi-automated research assistant（OpenCode 版）
 
 **Mission**: 覆盖完整的学术研究生命周期（从构思到发表）和软件开发工作流，同时提供插件开发和项目管理能力。
 
@@ -68,8 +68,8 @@
 |------|---------|------|
 | 1. 研究构思 | `research-ideation` skill + `literature-reviewer` agent | `/research-init`, `/zotero-review`, `/zotero-notes` |
 | 2. ML 项目开发 | `architecture-design` skill + `code-reviewer` agent | `/plan`, `/commit`, `/tdd` |
-| 3. 实验分析 | `results-analysis` skill + `data-analyst` agent | `/analyze-results` |
-| 4. 论文写作 | `ml-paper-writing` skill + `paper-miner` agent | - |
+| 3. 实验分析 | `results-analysis` skill + `results-report` skill | `/analyze-results` |
+| 4. 论文写作 | `ml-paper-writing` skill + `paper-miner` agent | `/mine-writing-patterns` |
 | 5. 论文自审 | `paper-self-review` skill | - |
 | 6. 投稿与 Rebuttal | `review-response` skill + `rebuttal-writer` agent | `/rebuttal` |
 | 7. 录用后处理 | `post-acceptance` skill | `/presentation`, `/poster`, `/promote` |
@@ -77,16 +77,17 @@
 ### 支撑工作流
 
 - **Zotero 集成**: 通过 Zotero MCP 服务器实现论文自动导入、集合管理、全文阅读和准确引用导出
-- **知识提取**: `paper-miner` 和 `kaggle-miner` agent 持续从论文和竞赛中提取知识
+- **知识提取**: `paper-miner` 将论文写作模式沉淀到一份全局 canonical writing memory；`kaggle-miner` 持续从竞赛方案中提取工程知识
 - **技能进化**: `skill-development` → `skill-quality-reviewer` → `skill-improver` 三步改进循环
 
 ---
 
-## 技能目录（32 skills）
+## 技能目录（33 skills）
 
-### 研究与分析 (4)
+### 研究与分析 (5)
 - **research-ideation**: 研究构思启动
-- **results-analysis**: 实验结果分析
+- **results-analysis**: 严格统计分析与科研绘图
+- **results-report**: 实验后完整总结报告
 - **citation-verification**: 引文验证
 - **daily-paper-generator**: 每日论文生成器
 
@@ -132,7 +133,7 @@
 ### Skill 命名
 - 格式：kebab-case（小写+连字符）
 - 形式：优先使用 gerund form（动词+ing）
-- 示例：`scientific-writing`, `git-workflow`, `bug-detective`
+- 示例：`ml-paper-writing`, `git-workflow`, `bug-detective`
 
 ### Tags 命名
 - 格式：Title Case，缩写全大写（TDD, RLHF, NeurIPS）

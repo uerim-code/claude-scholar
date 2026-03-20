@@ -12,12 +12,13 @@
   <strong>Language</strong>: <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
 </div>
 
-> Personal OpenCode configuration for academic research and software development — covering the full research lifecycle from ideation to publication.
+> Semi-automated research assistant for academic research and software development, adapted for OpenCode. Covers ideation, coding, experiments, reporting, writing, and publication with human decision-making kept at the center.
 
 > **Note**: This is the **OpenCode edition** of Claude Scholar. For the Claude Code CLI version, see the [`main` branch](https://github.com/Galaxy-Dawn/claude-scholar/tree/main).
 
 ## News
 
+- **2026-03-18**: **Results reporting, writing memory, and safer installer updates** — split post-experiment work into `results-analysis` for strict statistics, real scientific figures, and analysis artifacts, plus `results-report` for complete post-experiment reports; removed the redundant `data-analyst` dependency, turned `/analyze-results` into the default one-shot analysis + report entrypoint, added a global `paper-miner` writing memory with `/mine-writing-patterns`, refreshed the project positioning around human-centered semi-automation, and made the OpenCode installer incremental-update friendly.
 - **2026-02-26**: **Zotero MCP Web/write workflow** — supports remote access, paper import via DOI/arXiv ID/URL, collection management, item updates, and safe deletion; see the config guides for [Claude Code](./MCP_SETUP.md#claude-code), [Codex CLI](./MCP_SETUP.md#codex-cli), and [OpenCode](./MCP_SETUP.md#opencode)
 - **2026-02-25**: Codex CLI branch — added `codex` branch supporting OpenAI Codex CLI with config.toml, 40 skills, 14 agents, and sandbox security
 - **2026-02-23**: Added `setup.sh` installer — safe merge into existing `~/.opencode`, auto-backup `opencode.jsonc`
@@ -37,7 +38,7 @@
 
 ## Introduction
 
-Claude Scholar (OpenCode Edition) is a configuration system for [OpenCode](https://github.com/sst/opencode) CLI, providing rich skills, commands, agents, and plugins optimized for:
+Claude Scholar (OpenCode Edition) is a semi-automated research assistant for [OpenCode](https://github.com/sst/opencode), providing skills, commands, agents, and plugins optimized for:
 - **Academic Research** - Complete research lifecycle: idea generation → experimentation → results analysis → paper writing → review response → conference preparation
 - **Software Development** - Git workflows, code review, test-driven development, ML project architecture
 - **Plugin Development** - Skill, Command, Agent, Plugin development guides with quality assessment
@@ -90,12 +91,12 @@ End-to-end research startup from idea generation to literature management:
 
 #### 3. Experiment Analysis
 
-**Tools**: `results-analysis` skill + `data-analyst` agent
+**Tools**: `results-analysis` skill + `results-report` skill
 
 **Process**:
-- **Statistical Testing**: t-test, ANOVA, Wilcoxon signed-rank → validate significance
-- **Visualization**: matplotlib/seaborn integration → publication-ready figures
-- **Ablation Studies**: Systematic component analysis
+- **Strict analysis**: rigorous statistics, significance testing, effect sizes, and real scientific figures
+- **Figure interpretation**: explain what each main figure shows and why it matters
+- **Results reporting**: turn the analysis bundle into a complete post-experiment report with decisions, limitations, and next actions
 
 **Command**: `/analyze-results <experiment_dir>`
 
@@ -106,8 +107,11 @@ End-to-end research startup from idea generation to literature management:
 **Process**:
 - **Template Preparation**: Download conference .zip → extract main files → clean Overleaf-ready structure
 - **Citation Verification** (`citation-verification`): Multi-layer validation (Format → API → Information → Content)
+- **Writing memory mining**: use `/mine-writing-patterns` to extract reusable structure, phrasing, and venue signals into the global paper-miner memory
 - **Systematic Writing**: Narrative framing → 5-sentence abstract formula → section-by-section drafting
 - **Anti-AI Processing** (`writing-anti-ai`): Remove inflated symbolism, promotional language → add human voice
+
+**Commands**: `/mine-writing-patterns <paper>`
 
 **Venues**: NeurIPS, ICML, ICLR, ACL, AAAI, COLM, Nature, Science, Cell, PNAS
 
@@ -156,11 +160,12 @@ skill-development → skill-quality-reviewer → skill-improver
 
 ## What's Included
 
-### Skills (32 total)
+### Skills (33 total)
 
 **Research Workflow:**
 - `research-ideation` - Research startup: 5W1H brainstorming, literature review, gap analysis
-- `results-analysis` - Experiment analysis: statistical testing, visualization, ablation studies
+- `results-analysis` - Strict analysis bundle: rigorous statistics, real scientific figures, and analysis artifacts
+- `results-report` - Complete post-experiment report with decisions, limitations, and next actions
 - `citation-verification` - Multi-layer citation validation
 - `daily-paper-generator` - Automated daily paper generation for research tracking
 
@@ -208,7 +213,8 @@ skill-development → skill-quality-reviewer → skill-improver
 | `/research-init` | Launch research startup workflow (5W1H, literature review, gap analysis) |
 | `/zotero-review` | Read papers from Zotero collection, generate structured literature review |
 | `/zotero-notes` | Batch read Zotero papers, generate structured reading notes |
-| `/analyze-results` | Analyze experiment results (statistics, visualization, ablation) |
+| `/analyze-results` | Run the full post-experiment workflow in one shot: strict analysis first, then final report generation |
+| `/mine-writing-patterns` | Mine reusable writing patterns from papers into the global paper-miner writing memory |
 | `/rebuttal` | Generate systematic rebuttal document from review comments |
 | `/presentation` | Create conference presentation outline |
 | `/poster` | Generate academic poster design plan |
@@ -234,13 +240,12 @@ skill-development → skill-quality-reviewer → skill-improver
 | `/setup-pm` | Configure package manager (uv/pnpm) |
 | `/sc` | SuperClaude command suite (30 commands) |
 
-### Agents (14 specialized)
+### Agents (13 specialized)
 
 Agents are defined in `opencode.jsonc` and invoked automatically or on demand.
 
 **Research Agents:**
 - **literature-reviewer** - Literature search, classification, and trend analysis
-- **data-analyst** - Automated data analysis and visualization
 - **rebuttal-writer** - Systematic rebuttal writing with tone optimization
 - **paper-miner** - Extract paper writing knowledge from successful publications
 
@@ -278,10 +283,11 @@ claude-scholar/                  # OpenCode edition
 │   ├── stop-summary.ts                 # Session update - status check
 │   └── security-guard.ts              # Tool execution guard (block + warn)
 │
-├── skills/                      # 32 specialized skills (same as Claude Code version)
+├── skills/                      # 33 specialized skills
 │   ├── ml-paper-writing/
 │   ├── research-ideation/
 │   ├── results-analysis/
+│   ├── results-report/
 │   ├── review-response/
 │   ├── writing-anti-ai/
 │   ├── architecture-design/
@@ -292,6 +298,7 @@ claude-scholar/                  # OpenCode edition
 ├── commands/                    # 50+ slash commands (file-based, one .md per command)
 │   ├── research-init.md
 │   ├── zotero-review.md
+│   ├── mine-writing-patterns.md
 │   ├── commit.md
 │   ├── plan.md
 │   └── sc/                      # SuperClaude command suite (30 commands)
@@ -329,9 +336,9 @@ git clone -b opencode https://github.com/Galaxy-Dawn/claude-scholar.git /tmp/cla
 bash /tmp/claude-scholar/scripts/setup.sh
 ```
 
-The script copies skills/commands/plugins/scripts/utils into `~/.opencode` and installs `opencode.jsonc` (auto-backup to `opencode.jsonc.bak`).
+The installer is **backup-aware and incremental-update friendly**: it updates repo-managed `skills/commands/plugins/scripts/utils/AGENTS.md`, stores overwritten files in `~/.opencode/.claude-scholar-backups/<timestamp>/`, keeps `opencode.jsonc.bak`, and merges repo-managed `agent/mcp/permission/plugin` entries without clobbering your existing provider, model, auth, or custom config fields.
 
-**Includes**: All 32 skills, 50+ commands, 14 agents, 5 plugins, and project rules.
+**Includes**: 33 skills, 50+ commands, 13 agents, 5 plugins, and project rules.
 
 #### Option 2: Minimal Installation
 
@@ -373,6 +380,7 @@ cp -r /tmp/claude-scholar/commands/commit.md ~/.opencode/commands/
 
 - [OpenCode](https://github.com/sst/opencode) CLI
 - Git
+- Node.js (required for the safe installer merge logic)
 - uv, Python (for Python development)
 - [Zotero](https://www.zotero.org/) + [Galaxy-Dawn/zotero-mcp](https://github.com/Galaxy-Dawn/zotero-mcp) (for literature management). See [MCP Setup Guide](./MCP_SETUP.md) for details.
 

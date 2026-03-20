@@ -46,7 +46,7 @@ When determining which package manager to use, the following order is checked:
 
 ### Project Configuration
 ```json
-// .claude/package-manager.json
+// .opencode/package-manager.json
 {
   "packageManager": "bun"
 }
@@ -61,14 +61,14 @@ When determining which package manager to use, the following order is checked:
 
 ## Environment Variable
 
-Set `CLAUDE_PACKAGE_MANAGER` to override all other detection methods:
+Set `OPENCODE_PACKAGE_MANAGER` to override all other detection methods:
 
 ```bash
 # Windows (PowerShell)
-$env:CLAUDE_PACKAGE_MANAGER = "pnpm"
+$env:OPENCODE_PACKAGE_MANAGER = "pnpm"
 
 # macOS/Linux
-export CLAUDE_PACKAGE_MANAGER=pnpm
+export OPENCODE_PACKAGE_MANAGER=pnpm
 ```
 
 ## Run the Detection

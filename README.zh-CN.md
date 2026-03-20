@@ -12,12 +12,13 @@
   <strong>语言</strong>: <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
 </div>
 
-> 面向学术研究和软件开发的个人 OpenCode 配置仓库 — 覆盖从构思到发表的完整研究生命周期。
+> 面向学术研究和软件开发的 semi-automated research assistant（OpenCode 版），覆盖构思、编码、实验、报告、写作与发表，并始终以人的研究决策为中心。
 
 > **注意**: 这是 Claude Scholar 的 **OpenCode 版本**。Claude Code CLI 版本请查看 [`main` 分支](https://github.com/Galaxy-Dawn/claude-scholar/tree/main)。
 
 ## News
 
+- **2026-03-18**: **实验报告、写作记忆与安装器安全更新** — 将实验后处理拆成两层：`results-analysis` 负责严格统计、真实科研图和分析产物，`results-report` 负责完整实验总结报告；移除了冗余的 `data-analyst` 依赖，把 `/analyze-results` 调整为默认的一键分析 + 成稿入口；新增全局 `paper-miner` writing memory 与 `/mine-writing-patterns`；同时把项目定位收敛为以人类决策为中心的半自动研究助手，并让 OpenCode 安装器支持安全增量更新。
 - **2026-02-26**: **Zotero MCP Web/写操作工作流** — 支持远程访问，可通过 DOI/arXiv ID/URL 导入论文，进行集合管理、条目更新和安全删除；附 [Claude Code](./MCP_SETUP.zh-CN.md#claude-code)、[Codex CLI](./MCP_SETUP.zh-CN.md#codex-cli)、[OpenCode](./MCP_SETUP.zh-CN.md#opencode) 三平台配置指南
 - **2026-02-25**: Codex CLI 分支 — 新增 `codex` 分支，支持 OpenAI Codex CLI，包含 config.toml、40 个 skills、14 个 agents 和 sandbox 安全机制
 - **2026-02-23**: 新增 `setup.sh` 安装脚本 — 安全合并到已有 `~/.opencode`，自动备份 `opencode.jsonc`
@@ -37,7 +38,7 @@
 
 ## 简介
 
-Claude Scholar (OpenCode 版) 是一个面向 [OpenCode](https://github.com/sst/opencode) CLI 的配置系统，提供丰富的技能、命令、代理和插件，针对以下场景优化：
+Claude Scholar（OpenCode 版）是一个面向 [OpenCode](https://github.com/sst/opencode) 的 semi-automated research assistant，提供技能、命令、代理和插件，针对以下场景优化：
 - **学术研究** - 完整的研究生命周期：想法生成 → 实验 → 结果分析 → 论文写作 → 审稿回复 → 会议准备
 - **软件开发** - Git 工作流、代码审查、测试驱动开发、ML 项目架构
 - **插件开发** - Skill、Command、Agent、Plugin 开发指南与质量评估
@@ -87,13 +88,27 @@ Claude Scholar (OpenCode 版) 是一个面向 [OpenCode](https://github.com/sst/
 
 #### 3. 实验分析
 
-**工具**: `results-analysis` skill + `data-analyst` agent
+**工具**: `results-analysis` skill + `results-report` skill
+
+**流程**:
+- **严格分析**：进行严谨统计、显著性检验、effect size 和真实科研图生成
+- **图表解释**：逐图解释关键观察、证据边界和含义
+- **总结报告**：把分析产物组织成完整实验复盘，并给出 next actions
 
 **命令**: `/analyze-results <experiment_dir>`
 
 #### 4. 论文写作
 
 **工具**: `ml-paper-writing` skill + `paper-miner` agent + `latex-conference-template-organizer` skill
+
+**流程**:
+- **模板准备**：下载会议模板并整理成可直接写作的结构
+- **引文验证**：用 `citation-verification` 做格式、来源与内容核查
+- **写作记忆挖掘**：用 `/mine-writing-patterns` 从强论文中抽取结构、phrasing 和 venue signals，沉淀到全局 paper-miner memory
+- **系统化写作**：围绕 narrative 组织各章节内容
+- **去 AI 味**：用 `writing-anti-ai` 做自然表达修整
+
+**命令**: `/mine-writing-patterns <paper>`
 
 **会议**: NeurIPS, ICML, ICLR, ACL, AAAI, COLM, Nature, Science, Cell, PNAS
 
@@ -140,11 +155,12 @@ skill-development → skill-quality-reviewer → skill-improver
 
 ## 功能亮点
 
-### 技能（32 个）
+### 技能（33 个）
 
 **研究工作流：**
 - `research-ideation` - 研究构思启动：5W1H、文献综述、Gap 分析
-- `results-analysis` - 实验分析：统计检验、可视化、消融实验
+- `results-analysis` - 严格分析产物包：严谨统计、真实科研图与分析附录
+- `results-report` - 面向决策的完整实验总结报告
 - `citation-verification` - 多层引文验证
 - `daily-paper-generator` - 每日论文生成器
 
@@ -192,7 +208,8 @@ skill-development → skill-quality-reviewer → skill-improver
 | `/research-init` | 启动研究工作流（5W1H、文献综述、Gap 分析） |
 | `/zotero-review` | 从 Zotero 集合读取论文，生成文献综述 |
 | `/zotero-notes` | 批量阅读 Zotero 论文，生成阅读笔记 |
-| `/analyze-results` | 分析实验结果 |
+| `/analyze-results` | 一键执行实验后工作流：先做严格分析，再生成最终实验报告 |
+| `/mine-writing-patterns` | 从论文中抽取可复用写作模式并写入全局 paper-miner memory |
 | `/rebuttal` | 生成系统化 rebuttal 文档 |
 | `/presentation` | 创建会议演讲大纲 |
 | `/poster` | 生成学术海报设计方案 |
@@ -218,13 +235,12 @@ skill-development → skill-quality-reviewer → skill-improver
 | `/setup-pm` | 配置包管理器（uv/pnpm） |
 | `/sc` | SuperClaude 命令套件（30 个命令） |
 
-### 代理（14 个专业）
+### 代理（13 个专业）
 
 代理定义在 `opencode.jsonc` 中，可自动或按需调用。
 
 **研究代理：**
 - **literature-reviewer** - 文献搜索、分类和趋势分析
-- **data-analyst** - 自动化数据分析和可视化
 - **rebuttal-writer** - 系统化 rebuttal 写作
 - **paper-miner** - 从成功论文中提取写作知识
 
@@ -262,8 +278,9 @@ claude-scholar/                  # OpenCode 版
 │   ├── stop-summary.ts                 # 会话更新 - 状态检查
 │   └── security-guard.ts              # 工具执行守卫（block + warn）
 │
-├── skills/                      # 32 个专业技能（与 Claude Code 版本相同）
+├── skills/                      # 33 个专业技能
 ├── commands/                    # 50+ 斜杠命令（文件式，每个命令一个 .md）
+│   ├── mine-writing-patterns.md
 │   └── sc/                      # SuperClaude 命令套件
 ├── rules/                       # 全局指导原则（已合并到 AGENTS.md）
 ├── scripts/                     # 工具脚本
@@ -288,9 +305,9 @@ git clone -b opencode https://github.com/Galaxy-Dawn/claude-scholar.git /tmp/cla
 bash /tmp/claude-scholar/scripts/setup.sh
 ```
 
-脚本会将 skills/commands/plugins/scripts/utils 复制到 `~/.opencode`，并安装 `opencode.jsonc`（自动备份为 `opencode.jsonc.bak`）。
+安装器支持**安全增量更新**：会更新 repo 管理的 `skills/commands/plugins/scripts/utils/AGENTS.md`，把被覆盖文件备份到 `~/.opencode/.claude-scholar-backups/<timestamp>/`，保留 `opencode.jsonc.bak`，并在不覆盖现有 provider、model、auth 与自定义配置字段的前提下合并 repo 管理的 `agent/mcp/permission/plugin` 配置。
 
-**包含**：所有 32 个技能、50+ 命令、14 个代理、5 个插件和项目规则。
+**包含**：33 个技能、50+ 命令、13 个代理、5 个插件和项目规则。
 
 #### 选项 2：最小化安装
 
@@ -328,6 +345,7 @@ cp -r /tmp/claude-scholar/skills/architecture-design ~/.opencode/skills/
 
 - [OpenCode](https://github.com/sst/opencode) CLI
 - Git
+- Node.js（安全合并安装器需要）
 - uv、Python（用于 Python 开发）
 - [Zotero](https://www.zotero.org/) + [Galaxy-Dawn/zotero-mcp](https://github.com/Galaxy-Dawn/zotero-mcp)（用于文献管理）。详见 [MCP 配置指南](./MCP_SETUP.zh-CN.md)。
 
