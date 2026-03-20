@@ -129,7 +129,7 @@ cp /tmp/claude-scholar/commands/mine-writing-patterns.md ~/.opencode/commands/
 
 **Post-install**: minimal/manual install does **not** auto-merge `opencode.jsonc`; copy only the MCP/agent/permission entries you want.
 
-**Optional Obsidian bundle**: if you also want the bound project knowledge-base workflow, additionally copy `OBSIDIAN_SETUP.md`, `skills/obsidian-*`, `skills/zotero-obsidian-bridge`, and `commands/obsidian-*.md` into `~/.opencode/`.
+**Optional Obsidian bundle**: if you also want the bound project knowledge-base workflow, additionally copy `OBSIDIAN_SETUP.md`, `skills/obsidian-*`, `skills/zotero-obsidian-bridge`, and `commands/obsidian-*.md` into `~/.opencode/`, then merge the Obsidian-related `agent` and `plugin` entries from the repo `opencode.jsonc` (the two Obsidian agents live there). The simplest path is still to rerun `bash scripts/setup.sh`.
 
 ### Option 3: Selective Installation
 
@@ -313,8 +313,12 @@ OpenCode uses **plugins**, not Claude Code hooks.
 | Agent | `research-knowledge-curator-obsidian` | Act as the default curator for bound repos and keep daily / plan / experiment / result context synchronized. |
 | Command | `/obsidian-init` | Bootstrap or import an Obsidian project knowledge base for the current repository. |
 | Command | `/obsidian-ingest` | Ingest a new Markdown file or folder into the correct canonical destination. |
+| Command | `/obsidian-review` | Generate project-linked literature synthesis from paper notes in the bound vault. |
+| Command | `/obsidian-notes` | Normalize paper notes and connect them to project context, experiments, and results. |
+| Command | `/obsidian-link` | Repair or strengthen wikilinks across canonical project notes. |
 | Command | `/obsidian-sync` | Force deterministic sync between the repo, `.opencode/project-memory/`, and the bound vault. |
 | Command | `/obsidian-note` | Find, rename, archive, or purge a single canonical note. |
+| Command | `/obsidian-project` | Detach, archive, purge, or rebuild a project knowledge base. |
 | Command | `/obsidian-views` | Generate optional `.base` views and extra canvases on explicit request. |
 
 **How it works**

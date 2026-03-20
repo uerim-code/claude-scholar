@@ -56,14 +56,16 @@ copy_file_safely() {
 
   mkdir -p "$(dirname "$target_file")"
 
-  if [ -f "$target_file" ] && cmp -s "$src_file" "$target_file"; then
+  if [ -f "$target_file" ] && [ ! -L "$target_file" ] && cmp -s "$src_file" "$target_file"; then
     SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
     return 0
   fi
 
   if [ -e "$target_file" ]; then
     backup_path "$target_file"
-    [ -d "$target_file" ] && rm -rf "$target_file"
+    if [ -d "$target_file" ] || [ -L "$target_file" ]; then
+      rm -rf "$target_file"
+    fi
   fi
 
   cp -p "$src_file" "$target_file"
@@ -74,9 +76,9 @@ copy_dir_safely() {
   local src_dir="$1"
   local target_dir="$2"
 
-  if [ -e "$target_dir" ] && [ ! -d "$target_dir" ]; then
+  if [ -L "$target_dir" ] || { [ -e "$target_dir" ] && [ ! -d "$target_dir" ]; }; then
     backup_path "$target_dir"
-    rm -f "$target_dir"
+    rm -rf "$target_dir"
   fi
   mkdir -p "$target_dir"
 
@@ -117,10 +119,13 @@ merge_opencode_config() {
   cp "$target" "${target}.bak"
   info "Backed up opencode.jsonc → opencode.jsonc.bak"
 
-  OPENCODE_TARGET="$target" OPENCODE_TEMPLATE="$template" node <<'NODE'
+  OPENCODE_TARGET="$target" OPENCODE_TEMPLATE="$template" OPENCODE_HOME="$OPENCODE_DIR" node <<'NODE'
 const fs = require('fs');
+const path = require('path');
+const { pathToFileURL } = require('url');
 const targetPath = process.env.OPENCODE_TARGET;
 const templatePath = process.env.OPENCODE_TEMPLATE;
+const opencodeHome = process.env.OPENCODE_HOME;
 const existing = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
 const template = JSON.parse(fs.readFileSync(templatePath, 'utf8'));
 
@@ -178,6 +183,25 @@ for (const item of template.plugin || []) {
   const sig = JSON.stringify(item);
   if (!seen.has(sig)) {
     plugin.push(clone(item));
+    seen.add(sig);
+  }
+}
+
+const repoManagedPlugins = [
+  "session-summary.ts",
+  "session-start.ts",
+  "security-guard.ts",
+  "skill-eval.ts",
+  "stop-summary.ts",
+]
+  .map((name) => path.join(opencodeHome, "plugins", name))
+  .filter((pluginPath) => fs.existsSync(pluginPath))
+  .map((pluginPath) => pathToFileURL(pluginPath).href);
+
+for (const item of repoManagedPlugins) {
+  const sig = JSON.stringify(item);
+  if (!seen.has(sig)) {
+    plugin.push(item);
     seen.add(sig);
   }
 }

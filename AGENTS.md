@@ -248,10 +248,10 @@ For complex problems, use split-role sub-agents:
 ### Secrets Management
 - API keys, tokens, passwords must NEVER appear in committed files
 - Use environment variables or `.env` files (gitignored)
-- local runtime config files that may contain auth or API settings must stay out of Git
+- local runtime config files that may contain auth or API settings must stay out of Git; the repo-tracked `opencode.jsonc` in this project is a template, but user-local copies with personal auth/API settings are sensitive
 
 ### Sensitive Files (NEVER commit)
-`opencode.jsonc`, `.env`, `*.pem`, `*.key`, `credentials.json`, `*_secret*`, `*_token*`, `*.sqlite`, `*.db`
+`auth.json`, `.env`, `*.pem`, `*.key`, `credentials.json`, `*_secret*`, `*_token*`, `*.sqlite`, `*.db`
 
 ### Prohibited in Source Code
 - Hardcoded passwords or API keys

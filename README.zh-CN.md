@@ -129,7 +129,7 @@ cp /tmp/claude-scholar/commands/mine-writing-patterns.md ~/.opencode/commands/
 
 **安装后**：最小化/手动安装**不会自动合并** `opencode.jsonc`；请只复制你需要的 MCP/agent/permission 条目。
 
-**可选 Obsidian 套件**：如果你还想启用绑定式项目知识库工作流，请额外复制 `OBSIDIAN_SETUP.zh-CN.md`、`skills/obsidian-*`、`skills/zotero-obsidian-bridge` 和 `commands/obsidian-*.md` 到 `~/.opencode/`。
+**可选 Obsidian 套件**：如果你还想启用绑定式项目知识库工作流，请额外复制 `OBSIDIAN_SETUP.zh-CN.md`、`skills/obsidian-*`、`skills/zotero-obsidian-bridge` 和 `commands/obsidian-*.md` 到 `~/.opencode/`，然后把仓库 `opencode.jsonc` 里的 Obsidian `agent` / `plugin` 条目一并合并进去（两个 Obsidian agents 定义就在里面）。最简单的做法仍然是直接重跑 `bash scripts/setup.sh`。
 
 ### 选项 3：选择性安装
 
@@ -313,8 +313,12 @@ OpenCode 使用的是 **plugins**，不是 Claude Code hooks。
 | Agent | `research-knowledge-curator-obsidian` | 作为已绑定仓库的默认 curator，同步 daily / plan / experiment / result 上下文。 |
 | Command | `/obsidian-init` | 为当前仓库 bootstrap 或导入 Obsidian 项目知识库。 |
 | Command | `/obsidian-ingest` | 把新的 Markdown 文件或目录吸收进正确的 canonical 位置。 |
+| Command | `/obsidian-review` | 从绑定 vault 的 paper notes 生成项目关联的文献综合。 |
+| Command | `/obsidian-notes` | 规范化 paper notes，并连接到项目上下文、实验与结果。 |
+| Command | `/obsidian-link` | 修复或增强 canonical 项目笔记之间的 wikilink。 |
 | Command | `/obsidian-sync` | 强制同步仓库、`.opencode/project-memory/` 与绑定 vault 的状态。 |
 | Command | `/obsidian-note` | 查找、重命名、归档或彻底删除单个 canonical note。 |
+| Command | `/obsidian-project` | 对项目知识库执行 detach / archive / purge / rebuild。 |
 | Command | `/obsidian-views` | 按需生成 `.base` 视图和额外 canvas。 |
 
 **如何工作**

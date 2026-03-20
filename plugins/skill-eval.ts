@@ -23,7 +23,27 @@ function collectSkillNames(skillsDir: string): string[] {
 }
 
 export const SkillEvalPlugin: Plugin = async (ctx) => {
+  const binding = getProjectMemoryBinding(ctx.directory);
+  const candidate = detectResearchRepoCandidate(ctx.directory);
+
   return {
+    async "experimental.chat.system.transform"(_input, output) {
+      if (binding.bound) {
+        const memoryPath = binding.memoryPath || ".opencode/project-memory/<project_id>.md";
+        const vaultRoot = binding.vaultRoot || "unknown-vault";
+        output.system.push(
+          `This repository is bound to an Obsidian project knowledge base (project_id=${binding.projectId || "unknown-project"}, vault_root=${vaultRoot}). Treat obsidian-project-memory as the default curator path for research turns, keep ${memoryPath} synchronized when project state changes, and prefer updating canonical notes over creating duplicates.`,
+        );
+        return;
+      }
+
+      if (candidate.candidate) {
+        output.system.push(
+          "This repository looks like a research-project candidate. When the user is doing project-planning, literature, experiment, result, or writing work, consider obsidian-project-bootstrap as the default path to bind the repo into the Obsidian knowledge base.",
+        );
+      }
+    },
+
     async "command.execute.before"(input) {
       const text = String(input.arguments || "").toLowerCase();
       if (!text) return;
@@ -51,8 +71,6 @@ export const SkillEvalPlugin: Plugin = async (ctx) => {
         }
       }
 
-      const binding = getProjectMemoryBinding(ctx.directory);
-      const candidate = detectResearchRepoCandidate(ctx.directory);
       const allSkills = collectSkillNames(skillsDir);
       const researchPrompt = /(paper|papers|literature|review|claim|method|evidence|experiment|result|plan|zotero|文献|论文|实验|结果|计划|obsidian)/i.test(text);
       const hinted: string[] = [];

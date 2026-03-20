@@ -95,7 +95,7 @@ export function getProjectMemoryBinding(cwd: string): ProjectMemoryBinding {
       registryPath,
       memoryPath,
       projectId: firstKey,
-      vaultRoot: project.project_root || project.vault_path || null,
+      vaultRoot: project.vault_root || project.project_root || project.vault_path || null,
     };
   } catch {
     return { bound: false, registryPath, memoryPath: null, projectId: null, vaultRoot: null };
