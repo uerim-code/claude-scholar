@@ -7,6 +7,8 @@ description: This skill should be used when the user asks to maintain an Obsidia
 
 Maintain a **filesystem-first, agent-driven** Obsidian knowledge base for a research project.
 
+Default note output language is **Chinese**. Keep technical terms, paper titles, and established folder names in their original form when that is clearer. Only switch note prose to another language when the user explicitly asks.
+
 Prefer this skill when working inside a repository that:
 - already contains `.codex/project-memory/registry.yaml`, or
 - clearly looks like a research project and should be bound to an Obsidian vault.

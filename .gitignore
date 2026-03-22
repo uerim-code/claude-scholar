@@ -44,3 +44,5 @@ projects/
 temp/
 tasks/
 teams/
+
+.codex/

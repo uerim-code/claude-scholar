@@ -168,3 +168,32 @@ obsidian://search?vault=My%20Vault&query=%23experiment
 | 还看到 `Views/`、`Concepts/`、`Datasets/` 被写成默认结构 | 这通常来自旧文档或旧项目生成版本；当前默认工作流使用的是上面的精简结构，默认图谱只保留 `Maps/literature.canvas` |
 | CLI 命令不可用 | 先检查 `Settings -> General -> Advanced -> Command line interface` 是否已开启；否则继续使用 filesystem-only 同步即可 |
 | “移除项目知识”太激进 | 优先使用 archive 或 detach；purge 仅用于永久删除 |
+
+## Windows 使用方案
+
+如果你在 WSL 里运行 Claude Scholar，但想用 **Windows 原生 Obsidian** 获得更稳定的窗口行为，推荐使用下面的双份方案：
+
+- `WSL vault` 作为 **source of truth**：`/home/circle/claude-scholar/obsidian-vault`
+- `Windows 本地目录` 作为镜像副本：例如 `/mnt/c/Users/<你的用户名>/Documents/Obsidian/claude-scholar-vault`
+- Windows Obsidian 只打开 **Windows 本地镜像目录**
+
+同步脚本：
+
+```bash
+bash scripts/sync_obsidian_to_windows.sh \
+  --windows-path /mnt/c/Users/<你的用户名>/Documents/Obsidian/claude-scholar-vault
+```
+
+首次建议先预览：
+
+```bash
+bash scripts/sync_obsidian_to_windows.sh \
+  --windows-path /mnt/c/Users/<你的用户名>/Documents/Obsidian/claude-scholar-vault \
+  --dry-run
+```
+
+说明：
+
+- 默认会把 WSL vault 同步到 Windows 镜像，并删除镜像里已经不存在于源目录的文件。
+- 如果你不想自动删除镜像中的多余文件，可以追加 `--no-delete`。
+- 这个方案的核心是：**我继续在 WSL 内维护 vault，你在 Windows 上稳定打开镜像副本。**

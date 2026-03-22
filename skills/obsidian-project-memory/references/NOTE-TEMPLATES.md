@@ -1,85 +1,87 @@
 # Note Templates
 
+默认使用中文撰写 note；只有用户明确要求其他语言时才切换。
+
 Keep templates lightweight. Use only the sections that are useful.
 
 ## Project Overview
 
 ```markdown
-# Project Overview
+# 项目概览
 
-## What this project studies
+## 这个项目研究什么
 - ...
 
-## Why this is hard
+## 为什么这个问题难
 - ...
 
-## Current project identity
+## 当前项目定位
 - ...
 
-## Most mature research branches
+## 目前最成熟的研究分支
 - ...
 ```
 
 ## Research Questions
 
 ```markdown
-# Research Questions
+# 研究问题
 
-## Q1
+## 问题 1
 - ...
 
-## Q2
+## 问题 2
 - ...
 ```
 
 ## Experiment Note
 
 ```markdown
-# Experiment Name
+# 实验名称
 
-## Goal
+## 目标
 - ...
 
-## Motivation from papers or prior results
+## 来自论文或已有结果的动机
 - ...
 
-## Setup
+## 设置
 - ...
 
-## Main steps
+## 主要步骤
 - ...
 
-## Update
+## 更新
 - ...
 
-## Findings
+## 发现
 - ...
 
-## Promotion rule to Results
+## 晋升到 Results 的条件
 - ...
 
-## Next step
+## 下一步
 - ...
 ```
 
 ## Result Note
 
 ```markdown
-# Result Name
+# 结果名称
 
-## Headline
+## 核心结论
 - ...
 
-## Evidence
+## 证据
 - ...
 
-## Interpretation
+## 解读
 - ...
 
-## Writing carry-forward
+## 可延续到写作中的内容
 - ...
 
-## Why it matters
+## 为什么重要
 - ...
 ```
 
@@ -101,81 +103,81 @@ linked_results:
   - Results/Example-Result.md
 ---
 
-# Example Line / Round 1 / transfer-summary / YYYY-MM-DD
+# 示例实验线 / 第 1 轮 / transfer-summary / YYYY-MM-DD
 
-## Executive Summary
+## 执行摘要
 - ...
 
-## Experiment Identity and Decision Context
+## 实验身份与决策背景
 - ...
 
-## Setup and Evaluation Protocol
+## 设置与评测协议
 - ...
 
-## Main Findings
+## 主要发现
 - ...
 
-## Statistical Validation
+## 统计验证
 - ...
 
-## Figure-by-Figure Interpretation
+## 图表逐项解读
 - ...
 
-## Failure Cases / Negative Results / Limitations
+## 失败案例 / 负结果 / 局限性
 - ...
 
-## What Changed Our Belief
+## 哪些证据改变了判断
 - ...
 
-## Next Actions
+## 下一步动作
 - ...
 
-## Artifact and Reproducibility Index
+## 产物与复现索引
 - ...
 ```
 
 ## Paper Note
 
 ```markdown
-# Paper Title
+# 论文标题
 
-## Citation
+## 引文
 - ...
 
-## Claim
+## 核心主张
 - ...
 
-## Method
+## 方法
 - ...
 
-## Evidence
+## 证据
 - ...
 
-## Limitation
+## 局限
 - ...
 
-## Direct relevance to repo
+## 与当前仓库的直接相关性
 - ...
 
-## Relation to other papers
+## 与其他论文的关系
 - ...
 ```
 
 ## Daily Note
 
 ```markdown
-# Daily Log - YYYY-MM-DD
+# 日志 - YYYY-MM-DD
 
-## Focus
+## 关注重点
 - ...
 
-## Progress
+## 进展
 - ...
 
-## Promote later
+## 后续可沉淀
 - ...
 
-## Next
+## 下一步
 - ...
 ```
 
@@ -183,20 +185,20 @@ linked_results:
 ## Writing Note
 
 ```markdown
-# Writing Object Name
+# 写作对象名称
 
-## Purpose
+## 目的
 - ...
 
-## Supported by results
+## 有哪些结果支撑
 - ...
 
-## Paper context or comparison
+## 论文背景或对比
 - ...
 
-## Draft claims
+## 草拟论点
 - ...
 
-## Gaps before publishable use
+## 距离可发表使用还差什么
 - ...
 ```

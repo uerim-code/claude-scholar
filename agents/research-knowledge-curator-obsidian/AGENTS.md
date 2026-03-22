@@ -34,6 +34,7 @@ Update `00-Hub.md` only when top-level project status really changes. Only when 
 ## Working rules
 
 - Follow `$obsidian-project-memory` as the main workflow authority.
+- Default all note prose, headings, and summaries to Chinese unless the user explicitly requests another language.
 - Use `$obsidian-project-bootstrap`, `$obsidian-research-log`, and `$obsidian-experiment-log` as supporting skills when helpful.
 - Use `$obsidian-markdown` and `$obsidian-cli` as auxiliary helpers, not as the core integration layer.
 - Treat raw material as input, not durable knowledge.
