@@ -12,7 +12,7 @@
   <strong>Language</strong>: <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
 </div>
 
-> Semi-automated research assistant for academic research and software development, adapted for [Codex CLI](https://github.com/openai/codex) across ideation, literature review, experiments, reporting, writing, and project knowledge management.
+> Semi-automated research assistant for academic research and software development, especially for computer science and AI researchers, adapted for [Codex CLI](https://github.com/openai/codex) across ideation, literature review, experiments, reporting, writing, and project knowledge management.
 >
 > **Branch note**: this is the **Codex CLI edition** of Claude Scholar. For the Claude Code version, see the [`main` branch](https://github.com/Galaxy-Dawn/claude-scholar/tree/main). For the OpenCode version, see the [`opencode` branch](https://github.com/Galaxy-Dawn/claude-scholar/tree/opencode).
 
@@ -66,6 +66,17 @@ That means the Codex edition is designed to help with the heavy, repetitive, and
 - and what should be written, submitted, or abandoned.
 
 In other words, Claude Scholar is a **semi-automated research assistant**, not a fully automated scientist.
+
+## Who This Is For
+
+Claude Scholar is especially well-suited to:
+
+- **computer science researchers** who move between literature review, coding, experiments, and paper writing,
+- **AI / ML researchers** who need one assistant workflow spanning ideation, implementation, analysis, reporting, and rebuttal,
+- **research engineers and graduate students** who want stronger workflow structure without giving up human judgment,
+- and **software-heavy academic projects** that benefit from Zotero, Obsidian, CLI automation, and reproducible project memory.
+
+It can still help in other research settings, but its current workflow design is most aligned with computer science, AI, and adjacent computational research.
 
 ## Core Workflow
 
