@@ -122,6 +122,9 @@ git pull --ff-only
 bash scripts/setup.sh
 ```
 
+**Windows**：请使用 Git Bash / WSL 运行安装脚本。
+
+
 ### 选项 2：最小化安装
 
 只安装较小的一组研究工作流子集：

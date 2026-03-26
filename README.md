@@ -122,6 +122,9 @@ git pull --ff-only
 bash scripts/setup.sh
 ```
 
+**Windows**: please use Git Bash or WSL to run the installer.
+
+
 ### Option 2: Minimal Installation
 
 Install only a small research-focused subset:
