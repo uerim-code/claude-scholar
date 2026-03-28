@@ -18,6 +18,8 @@ import {
   FlaskConical,
   FileText,
   Presentation,
+  Code,
+  ExternalLink,
 } from "lucide-react";
 
 function StatCard({
@@ -242,34 +244,100 @@ export default function Dashboard() {
       <div>
         <h2 className="text-lg font-semibold mb-4">Araştırma Araçları</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5">
+          <Link href="/yetenekler?cat=Araştırma+%26+Analiz" className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 no-underline block">
             <FlaskConical size={24} className="text-[#6366f1] mb-3" />
-            <h3 className="text-sm font-semibold mb-1">Literatür Tarama</h3>
+            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)]">Literatur Tarama</h3>
             <p className="text-xs text-[var(--text-secondary)]">
-              Zotero entegrasyonu ile otomatik makale arama ve sınıflandırma
+              Zotero entegrasyonu ile otomatik makale arama ve siniflandirma
             </p>
-          </div>
-          <div className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5">
+            <div className="mt-3 pt-2 border-t border-[var(--border)] flex items-center gap-1 text-xs text-[var(--accent)]">
+              <ArrowRight size={12} /> Yetenekleri Gor
+            </div>
+          </Link>
+          <Link href="/yetenekler?cat=Obsidian" className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 no-underline block">
             <BookOpen size={24} className="text-[#8b5cf6] mb-3" />
-            <h3 className="text-sm font-semibold mb-1">Obsidian Bilgi Tabanı</h3>
+            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)]">Obsidian Bilgi Tabani</h3>
             <p className="text-xs text-[var(--text-secondary)]">
-              Dosya sistemi tabanlı proje bilgi tabanı ve not yönetimi
+              Dosya sistemi tabanli proje bilgi tabani ve not yonetimi
             </p>
-          </div>
-          <div className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5">
+            <div className="mt-3 pt-2 border-t border-[var(--border)] flex items-center gap-1 text-xs text-[var(--accent)]">
+              <ArrowRight size={12} /> Yetenekleri Gor
+            </div>
+          </Link>
+          <Link href="/yetenekler?cat=Makale+Yazımı+%26+Yayın" className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 no-underline block">
             <FileText size={24} className="text-[#22c55e] mb-3" />
-            <h3 className="text-sm font-semibold mb-1">Makale Yazımı</h3>
+            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)]">Makale Yazimi</h3>
             <p className="text-xs text-[var(--text-secondary)]">
-              NeurIPS, ICML, ICLR, Nature, Science formatlarında yazım
+              NeurIPS, ICML, ICLR, Nature, Science formatlarinda yazim
             </p>
-          </div>
-          <div className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5">
+            <div className="mt-3 pt-2 border-t border-[var(--border)] flex items-center gap-1 text-xs text-[var(--accent)]">
+              <ArrowRight size={12} /> Yetenekleri Gor
+            </div>
+          </Link>
+          <Link href="/komutlar?cat=Araştırma" className="card-hover bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 no-underline block">
             <Presentation size={24} className="text-[#f59e0b] mb-3" />
-            <h3 className="text-sm font-semibold mb-1">Sunum & Tanıtım</h3>
+            <h3 className="text-sm font-semibold mb-1 text-[var(--text-primary)]">Sunum & Tanitim</h3>
             <p className="text-xs text-[var(--text-secondary)]">
-              Konferans sunumları, posterler ve sosyal medya tanıtımı
+              Konferans sunumlari, posterler ve sosyal medya tanitimi
             </p>
+            <div className="mt-3 pt-2 border-t border-[var(--border)] flex items-center gap-1 text-xs text-[var(--accent)]">
+              <ArrowRight size={12} /> Komutlari Gor
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* Attribution & References */}
+      <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Code size={18} className="text-[var(--accent)]" />
+            Kaynak Referanslari
+          </h2>
+          <a
+            href="https://github.com/Galaxy-Dawn/claude-scholar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-[var(--accent)] hover:text-[var(--accent-hover)] no-underline flex items-center gap-1"
+          >
+            <ExternalLink size={14} /> Orijinal Proje
+          </a>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="px-4 py-3 bg-[var(--bg-primary)] rounded-lg border border-[var(--border)]">
+            <div className="text-xs text-[var(--text-muted)] mb-1">Yetenekler Dizini</div>
+            <code className="text-sm text-[var(--accent)]">skills/*.md</code>
           </div>
+          <div className="px-4 py-3 bg-[var(--bg-primary)] rounded-lg border border-[var(--border)]">
+            <div className="text-xs text-[var(--text-muted)] mb-1">Komut Tanimlari</div>
+            <code className="text-sm text-[var(--accent)]">commands/*.md</code>
+          </div>
+          <div className="px-4 py-3 bg-[var(--bg-primary)] rounded-lg border border-[var(--border)]">
+            <div className="text-xs text-[var(--text-muted)] mb-1">Ajan Tanimlari</div>
+            <code className="text-sm text-[var(--accent)]">agents/*.md</code>
+          </div>
+          <div className="px-4 py-3 bg-[var(--bg-primary)] rounded-lg border border-[var(--border)]">
+            <div className="text-xs text-[var(--text-muted)] mb-1">Hook Betikleri</div>
+            <code className="text-sm text-[var(--accent)]">hooks/*.js</code>
+          </div>
+          <div className="px-4 py-3 bg-[var(--bg-primary)] rounded-lg border border-[var(--border)]">
+            <div className="text-xs text-[var(--text-muted)] mb-1">Kural Dosyalari</div>
+            <code className="text-sm text-[var(--accent)]">rules/*.md</code>
+          </div>
+          <div className="px-4 py-3 bg-[var(--bg-primary)] rounded-lg border border-[var(--border)]">
+            <div className="text-xs text-[var(--text-muted)] mb-1">Yapilandirma Sablonu</div>
+            <code className="text-sm text-[var(--accent)]">settings.json.template</code>
+          </div>
+        </div>
+        <div className="mt-4 pt-4 border-t border-[var(--border)] flex items-center justify-between">
+          <p className="text-xs text-[var(--text-muted)]">
+            Bu arayuz{" "}
+            <a href="https://github.com/Galaxy-Dawn/claude-scholar" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline">
+              Galaxy-Dawn/claude-scholar
+            </a>{" "}
+            acik kaynak projesinin fork'udur. MIT Lisansi ile dagitilmaktadir.
+          </p>
+          <span className="text-xs text-[var(--text-muted)] font-mono">v1.0</span>
         </div>
       </div>
     </div>

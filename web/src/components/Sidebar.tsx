@@ -75,7 +75,15 @@ export default function Sidebar() {
             <span className="w-2 h-2 rounded-full bg-[var(--success)]" />
             Sistem Aktif
           </div>
-          <div>v1.0 - Claude Scholar</div>
+          <div className="mb-2">v1.0 - Claude Scholar</div>
+          <a
+            href="https://github.com/Galaxy-Dawn/claude-scholar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--accent)] hover:text-[var(--accent-hover)] no-underline text-[10px]"
+          >
+            Galaxy-Dawn/claude-scholar
+          </a>
         </div>
       </div>
     </aside>
