@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import LivePanel from "@/components/LivePanel";
+import { CommandRunnerProvider } from "@/lib/command-runner";
 
 export const metadata: Metadata = {
-  title: "Claude Scholar - Araştırma Asistanı",
-  description: "Akademik araştırma ve geliştirme için yarı otomatik asistan",
+  title: "Claude Scholar - Arastirma Asistani",
+  description: "Akademik arastirma ve gelistirme icin yari otomatik asistan",
 };
 
 export default function RootLayout({
@@ -15,8 +17,11 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body>
-        <Sidebar />
-        <main className="ml-64 min-h-screen p-8">{children}</main>
+        <CommandRunnerProvider>
+          <Sidebar />
+          <main className="ml-64 min-h-screen p-8 pb-32">{children}</main>
+          <LivePanel />
+        </CommandRunnerProvider>
       </body>
     </html>
   );
