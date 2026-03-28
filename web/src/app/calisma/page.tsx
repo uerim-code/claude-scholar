@@ -10,6 +10,7 @@ import {
   Bot,
   Plus,
   Upload,
+  Download,
 } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -107,6 +108,31 @@ export default function WorkspacePage() {
 
   const removeFile = (index: number) => setFiles((prev) => prev.filter((_, i) => i !== index));
 
+  const exportToWord = async (content: string) => {
+    try {
+      const res = await fetch("/api/export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content, title: "Claude Scholar - Rapor" }),
+      });
+      if (!res.ok) return;
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Claude-Scholar-Rapor-${new Date().toISOString().slice(0, 10)}.docx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch { /* ignore */ }
+  };
+
+  const exportAllToWord = async () => {
+    const allContent = messages
+      .map((m) => m.role === "assistant" ? m.content : `> ${m.content}`)
+      .join("\n\n---\n\n");
+    await exportToWord(allContent);
+  };
+
   const sendMessage = async (text?: string) => {
     const msg = text || input.trim();
     if (!msg && files.length === 0) return;
@@ -165,6 +191,24 @@ export default function WorkspacePage() {
           <Upload size={48} className="text-[var(--accent)] mb-3" />
           <p className="text-lg font-semibold text-[var(--accent)]">Dosyayi buraya birakin</p>
           <p className="text-sm text-[var(--text-muted)] mt-1">Excel, CSV, JSON, TXT, PY, MD, TEX, BIB...</p>
+        </div>
+      )}
+
+      {/* Header - only when messages exist */}
+      {messages.length > 0 && (
+        <div className="flex items-center justify-end gap-2 pb-3 shrink-0">
+          <button
+            onClick={exportAllToWord}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[var(--accent)] border border-[var(--accent)] rounded-lg cursor-pointer hover:bg-[var(--accent)] hover:text-white transition-all"
+          >
+            <Download size={12} /> Word'e Aktar
+          </button>
+          <button
+            onClick={() => { setMessages([]); setFiles([]); }}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[var(--text-muted)] border border-[var(--border)] rounded-lg cursor-pointer hover:border-[var(--danger)] hover:text-[var(--danger)] transition-all"
+          >
+            <Trash2 size={12} /> Temizle
+          </button>
         </div>
       )}
 
@@ -227,10 +271,19 @@ export default function WorkspacePage() {
                   {msg.content}
                 </div>
                 <div className={clsx(
-                  "text-[10px] mt-2",
+                  "flex items-center justify-between text-[10px] mt-2",
                   msg.role === "user" ? "text-white/40" : "text-[var(--text-muted)]"
                 )}>
-                  {msg.timestamp.toLocaleTimeString("tr-TR")}
+                  <span>{msg.timestamp.toLocaleTimeString("tr-TR")}</span>
+                  {msg.role === "assistant" && (
+                    <button
+                      onClick={() => exportToWord(msg.content)}
+                      className="flex items-center gap-1 px-2 py-0.5 rounded text-[var(--accent)] hover:bg-[var(--accent-light)] cursor-pointer transition-all"
+                      title="Word dosyasi olarak indir"
+                    >
+                      <Download size={10} /> .docx
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
