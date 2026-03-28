@@ -9,6 +9,7 @@ import {
   Trash2,
   Bot,
   Plus,
+  Upload,
 } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -41,6 +42,7 @@ export default function WorkspacePage() {
   const [sending, setSending] = useState(false);
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -58,9 +60,7 @@ export default function WorkspacePage() {
     }
   }, [input]);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = e.target.files;
-    if (!fileList) return;
+  const uploadFiles = useCallback(async (fileList: FileList | File[]) => {
     setUploading(true);
     for (const file of Array.from(fileList)) {
       const formData = new FormData();
@@ -77,8 +77,33 @@ export default function WorkspacePage() {
       } catch { /* ignore */ }
     }
     setUploading(false);
+  }, []);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) await uploadFiles(e.target.files);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+  }, []);
+
+  const handleDrop = useCallback(async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    if (e.dataTransfer.files.length > 0) {
+      await uploadFiles(e.dataTransfer.files);
+    }
+  }, [uploadFiles]);
 
   const removeFile = (index: number) => setFiles((prev) => prev.filter((_, i) => i !== index));
 
@@ -127,7 +152,21 @@ export default function WorkspacePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col" style={{ height: "calc(100vh - 4rem)" }}>
+    <div
+      className="max-w-4xl mx-auto flex flex-col relative"
+      style={{ height: "calc(100vh - 4rem)" }}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {/* Drag overlay */}
+      {dragging && (
+        <div className="absolute inset-0 z-50 bg-[var(--bg-primary)]/90 border-2 border-dashed border-[var(--accent)] rounded-2xl flex flex-col items-center justify-center">
+          <Upload size={48} className="text-[var(--accent)] mb-3" />
+          <p className="text-lg font-semibold text-[var(--accent)]">Dosyayi buraya birakin</p>
+          <p className="text-sm text-[var(--text-muted)] mt-1">Excel, CSV, JSON, TXT, PY, MD, TEX, BIB...</p>
+        </div>
+      )}
 
       {/* Empty State */}
       {messages.length === 0 && (
@@ -236,7 +275,7 @@ export default function WorkspacePage() {
       {/* Input */}
       <div className="shrink-0 bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-3 mb-2">
         <div className="flex items-end gap-2">
-          <input ref={fileInputRef} type="file" multiple accept=".csv,.json,.txt,.md,.py,.yaml,.yml,.tex,.bib,.tsv,.log,.xml,.html,.pdf" className="hidden" onChange={handleFileUpload} />
+          <input ref={fileInputRef} type="file" multiple accept=".csv,.json,.txt,.md,.py,.yaml,.yml,.tex,.bib,.tsv,.log,.xml,.html,.pdf,.xlsx,.xls,.xlsm,.xlsb,.ods" className="hidden" onChange={handleFileUpload} />
 
           <button
             onClick={() => fileInputRef.current?.click()}
