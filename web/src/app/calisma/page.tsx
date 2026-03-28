@@ -108,28 +108,45 @@ export default function WorkspacePage() {
 
   const removeFile = (index: number) => setFiles((prev) => prev.filter((_, i) => i !== index));
 
-  const exportToWord = async (content: string) => {
+  const exportToWord = async (content: string, customTitle?: string) => {
+    // Basliktan otomatik title cikar
+    let title = customTitle || "Claude Scholar - Rapor";
+    const h1Match = content.match(/^# (.+)$/m);
+    const h2Match = content.match(/^## (.+)$/m);
+    if (h1Match) title = h1Match[1].replace(/\*\*/g, "");
+    else if (h2Match) title = h2Match[1].replace(/\*\*/g, "");
+
     try {
       const res = await fetch("/api/export", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content, title: "Claude Scholar - Rapor" }),
+        body: JSON.stringify({ content, title }),
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        const err = await res.json();
+        console.error("Export hatasi:", err);
+        return;
+      }
       const blob = await res.blob();
+      if (blob.size < 500) {
+        console.error("Word dosyasi cok kucuk:", blob.size);
+        return;
+      }
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Claude-Scholar-Rapor-${new Date().toISOString().slice(0, 10)}.docx`;
+      const safeName = title.replace(/[^a-zA-Z0-9\u00C0-\u024F\u0400-\u04FF -]/g, "").substring(0, 60);
+      a.download = `${safeName}.docx`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch { /* ignore */ }
+    } catch (e) { console.error("Export istisna:", e); }
   };
 
   const exportAllToWord = async () => {
-    const allContent = messages
-      .map((m) => m.role === "assistant" ? m.content : `> ${m.content}`)
-      .join("\n\n---\n\n");
+    // Sadece asistan yanitlarini al
+    const assistantMessages = messages.filter((m) => m.role === "assistant");
+    if (assistantMessages.length === 0) return;
+    const allContent = assistantMessages.map((m) => m.content).join("\n\n---\n\n");
     await exportToWord(allContent);
   };
 
