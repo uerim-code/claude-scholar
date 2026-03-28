@@ -12,6 +12,7 @@ import {
   Zap,
   Shield,
   BookOpen,
+  HelpCircle,
 } from "lucide-react";
 
 const navItems = [
@@ -19,9 +20,10 @@ const navItems = [
   { href: "/yetenekler", label: "Yetenekler", icon: Sparkles },
   { href: "/komutlar", label: "Komutlar", icon: Terminal },
   { href: "/ajanlar", label: "Ajanlar", icon: Bot },
-  { href: "/arastirma", label: "Araştırma Akışı", icon: GitBranch },
+  { href: "/arastirma", label: "Arastirma Akisi", icon: GitBranch },
   { href: "/hooklar", label: "Hooklar & Kurallar", icon: Shield },
   { href: "/terminal", label: "Terminal", icon: Zap },
+  { href: "/kilavuz", label: "Kullanma Kilavuzu", icon: HelpCircle },
   { href: "/ayarlar", label: "Ayarlar", icon: Settings },
 ];
 
