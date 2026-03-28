@@ -19,12 +19,7 @@ import {
 const navItems = [
   { href: "/calisma", label: "Calisma Alani", icon: MessageSquare },
   { href: "/", label: "Kontrol Paneli", icon: LayoutDashboard },
-  { href: "/yetenekler", label: "Yetenekler", icon: Sparkles },
-  { href: "/komutlar", label: "Komutlar", icon: Terminal },
-  { href: "/ajanlar", label: "Ajanlar", icon: Bot },
   { href: "/arastirma", label: "Arastirma Akisi", icon: GitBranch },
-  { href: "/hooklar", label: "Hooklar & Kurallar", icon: Shield },
-  { href: "/terminal", label: "Terminal", icon: Zap },
   { href: "/kilavuz", label: "Kullanma Kilavuzu", icon: HelpCircle },
   { href: "/ayarlar", label: "Ayarlar", icon: Settings },
 ];

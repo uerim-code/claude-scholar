@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { buildPrompt } from "@/lib/prompt-builder";
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync, readdirSync } from "fs";
 import path from "path";
 
 const CONFIG_PATH = path.join(process.cwd(), ".config.json");
+const PROJECT_ROOT = path.resolve(process.cwd(), "..");
 
 function getApiKey(): string | null {
   if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY;
@@ -17,6 +17,62 @@ function getApiKey(): string | null {
   return null;
 }
 
+function loadAllSkillSummaries(): string {
+  const skillsDir = path.join(PROJECT_ROOT, "skills");
+  if (!existsSync(skillsDir)) return "";
+  const summaries: string[] = [];
+  for (const dir of readdirSync(skillsDir)) {
+    const skillFile = path.join(skillsDir, dir, "SKILL.md");
+    if (existsSync(skillFile)) {
+      const content = readFileSync(skillFile, "utf-8");
+      // First 500 chars as summary
+      summaries.push(`### ${dir}\n${content.substring(0, 500)}\n`);
+    }
+  }
+  return summaries.join("\n");
+}
+
+function loadAllAgentSummaries(): string {
+  const agentsDir = path.join(PROJECT_ROOT, "agents");
+  if (!existsSync(agentsDir)) return "";
+  const summaries: string[] = [];
+  for (const file of readdirSync(agentsDir).filter(f => f.endsWith(".md"))) {
+    const content = readFileSync(path.join(agentsDir, file), "utf-8");
+    summaries.push(`### ${file.replace(".md", "")}\n${content.substring(0, 400)}\n`);
+  }
+  return summaries.join("\n");
+}
+
+function loadClaudeMd(): string {
+  const claudeMdPath = path.join(PROJECT_ROOT, "CLAUDE.md");
+  if (existsSync(claudeMdPath)) {
+    return readFileSync(claudeMdPath, "utf-8").substring(0, 4000);
+  }
+  return "";
+}
+
+function loadCommandSummaries(): string {
+  const cmdsDir = path.join(PROJECT_ROOT, "commands");
+  if (!existsSync(cmdsDir)) return "";
+  const summaries: string[] = [];
+  for (const file of readdirSync(cmdsDir).filter(f => f.endsWith(".md"))) {
+    const content = readFileSync(path.join(cmdsDir, file), "utf-8");
+    summaries.push(`### /${file.replace(".md", "")}\n${content.substring(0, 300)}\n`);
+  }
+  return summaries.join("\n");
+}
+
+function loadRules(): string {
+  const rulesDir = path.join(PROJECT_ROOT, "rules");
+  if (!existsSync(rulesDir)) return "";
+  const all: string[] = [];
+  for (const file of readdirSync(rulesDir).filter(f => f.endsWith(".md"))) {
+    const content = readFileSync(path.join(rulesDir, file), "utf-8");
+    all.push(`## ${file}\n${content.substring(0, 500)}\n`);
+  }
+  return all.join("\n");
+}
+
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
@@ -24,7 +80,7 @@ interface ChatMessage {
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages, activeSkill, fileContents } = await request.json() as {
+    const { messages, fileContents } = await request.json() as {
       messages: ChatMessage[];
       activeSkill?: string;
       fileContents?: { name: string; content: string }[];
@@ -38,19 +94,42 @@ export async function POST(request: NextRequest) {
       }, { status: 401 });
     }
 
-    // Build system prompt with active skill context
-    let systemPrompt: string;
-    if (activeSkill) {
-      const ctx = buildPrompt(activeSkill);
-      systemPrompt = ctx.systemPrompt;
-    } else {
-      const ctx = buildPrompt("/research-init");
-      systemPrompt = ctx.systemPrompt.split("--- KOMUT TANIMI ---")[0];
-    }
+    // Build comprehensive system prompt with all knowledge
+    const claudeMd = loadClaudeMd();
+    const skillSummaries = loadAllSkillSummaries();
+    const agentSummaries = loadAllAgentSummaries();
+    const commandSummaries = loadCommandSummaries();
+    const rules = loadRules();
 
-    systemPrompt += `\n\nHer zaman Turkce yanit ver. Kullaniciya yardimci ol.
-Adim adim rehberlik yap. Kullanicinin bir sonraki adimda ne yapmasini gerektigini acikla.
-Dosya iceriklerini analiz edebilirsin.`;
+    const systemPrompt = `Sen Claude Scholar, akademik arastirma ve yazilim gelistirme icin uzman bir asistansin.
+Turkce yanit ver. Kullaniciya adim adim rehberlik et.
+
+## Temel Bilgiler
+${claudeMd}
+
+## Kurallar (Her Zaman Aktif)
+${rules}
+
+## Mevcut Yetenekler
+Kullanicinin istegine gore otomatik olarak en uygun yetenegi sec ve uygula:
+${skillSummaries}
+
+## Mevcut Ajanlar
+Gerektiginde ajan rolu ustlen:
+${agentSummaries}
+
+## Mevcut Komutlar
+${commandSummaries}
+
+## Calisma Prensiplerin
+1. Kullanici bir gorev verdiginde, hangi yetenek/ajan/komutun uygun oldugunu OTOMATIK belirle
+2. Sectigin arac hakkinda kullaniciya kisa bilgi ver (ornek: "Literatur tarama yetenegini kullaniyorum...")
+3. Adim adim rehberlik et, her adimda ne yapilacagini acikla
+4. Dosya yuklendiginde icerigi analiz et ve uygun islemleri oner
+5. Deney sonuclari geldiginde istatistiksel analiz yap
+6. Makale yaziminda akademik standartlari uygula
+7. Her zaman bir sonraki adimi oner
+8. Markdown formatinda duzenli ve okunakli yanit ver`;
 
     // Inject file contents into last user message
     const processedMessages = [...messages];
