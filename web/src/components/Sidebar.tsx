@@ -13,9 +13,11 @@ import {
   Shield,
   BookOpen,
   HelpCircle,
+  MessageSquare,
 } from "lucide-react";
 
 const navItems = [
+  { href: "/calisma", label: "Calisma Alani", icon: MessageSquare },
   { href: "/", label: "Kontrol Paneli", icon: LayoutDashboard },
   { href: "/yetenekler", label: "Yetenekler", icon: Sparkles },
   { href: "/komutlar", label: "Komutlar", icon: Terminal },
