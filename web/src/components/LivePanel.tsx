@@ -1,30 +1,58 @@
 "use client";
 import { useCommandRunner } from "@/lib/command-runner";
+import Link from "next/link";
 import {
   ChevronDown,
-  ChevronUp,
   Trash2,
   Loader2,
   CheckCircle,
   XCircle,
   Terminal,
-  X,
+  FileText,
+  AlertTriangle,
+  Settings,
 } from "lucide-react";
 import { clsx } from "clsx";
 
 export default function LivePanel() {
-  const { logs, isRunning, currentCommand, clearLogs, panelOpen, setPanelOpen } =
+  const { logs, isRunning, currentCommand, clearLogs, panelOpen, setPanelOpen, apiConfigured } =
     useCommandRunner();
+
+  // API key uyarisi - her zaman goster
+  if (!apiConfigured) {
+    return (
+      <div className="fixed bottom-0 left-64 right-0 z-50 bg-[rgba(245,158,11,0.1)] border-t-2 border-[var(--warning)] p-4">
+        <div className="flex items-center gap-3 max-w-3xl mx-auto">
+          <AlertTriangle size={20} className="text-[var(--warning)] shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-[var(--text-primary)]">
+              API Anahtari Gerekli
+            </p>
+            <p className="text-xs text-[var(--text-secondary)]">
+              Komutlari calistirmak icin Anthropic API anahtarinizi yapilandirin.
+            </p>
+          </div>
+          <Link
+            href="/ayarlar"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[var(--warning)] text-black rounded-lg text-sm font-medium hover:opacity-90 transition-all no-underline"
+          >
+            <Settings size={14} />
+            Ayarlara Git
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (!panelOpen && logs.length === 0) return null;
 
   return (
     <>
-      {/* Floating Status Bar - always visible when running */}
+      {/* Floating indicator when running and panel closed */}
       {isRunning && !panelOpen && (
         <button
           onClick={() => setPanelOpen(true)}
-          className="fixed bottom-4 right-4 z-50 flex items-center gap-2 px-4 py-3 bg-[var(--accent)] text-white rounded-xl shadow-lg cursor-pointer animate-pulse"
+          className="fixed bottom-4 right-4 z-50 flex items-center gap-2 px-4 py-3 bg-[var(--accent)] text-white rounded-xl shadow-lg cursor-pointer"
         >
           <Loader2 size={16} className="animate-spin" />
           <span className="text-sm font-medium">{currentCommand}</span>
@@ -39,7 +67,6 @@ export default function LivePanel() {
         >
           <Terminal size={16} className="text-[var(--accent)]" />
           <span className="text-sm">{logs.length} islem</span>
-          <ChevronUp size={14} />
         </button>
       )}
 
@@ -50,34 +77,19 @@ export default function LivePanel() {
           <div className="flex items-center justify-between px-4 py-2.5 bg-[#161b22] border-b border-[var(--border)] shrink-0">
             <div className="flex items-center gap-3">
               <Terminal size={16} className="text-[var(--accent)]" />
-              <span className="text-sm font-medium text-[var(--text-primary)]">
-                Canli Cikti
-              </span>
+              <span className="text-sm font-medium text-[var(--text-primary)]">Canli Cikti</span>
               {isRunning && (
                 <span className="flex items-center gap-1.5 text-xs text-[var(--warning)]">
                   <Loader2 size={12} className="animate-spin" />
                   Calisiyor: {currentCommand}
                 </span>
               )}
-              {!isRunning && logs.length > 0 && (
-                <span className="text-xs text-[var(--text-muted)]">
-                  {logs.length} islem
-                </span>
-              )}
             </div>
             <div className="flex items-center gap-1">
-              <button
-                onClick={clearLogs}
-                className="p-1.5 rounded hover:bg-[var(--bg-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
-                title="Temizle"
-              >
+              <button onClick={clearLogs} className="p-1.5 rounded hover:bg-[var(--bg-hover)] text-[var(--text-muted)] cursor-pointer" title="Temizle">
                 <Trash2 size={14} />
               </button>
-              <button
-                onClick={() => setPanelOpen(false)}
-                className="p-1.5 rounded hover:bg-[var(--bg-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
-                title="Kapat"
-              >
+              <button onClick={() => setPanelOpen(false)} className="p-1.5 rounded hover:bg-[var(--bg-hover)] text-[var(--text-muted)] cursor-pointer" title="Kapat">
                 <ChevronDown size={14} />
               </button>
             </div>
@@ -102,7 +114,6 @@ export default function LivePanel() {
                       : "border-[var(--danger)] bg-[rgba(239,68,68,0.03)]"
                 )}
               >
-                {/* Log Header */}
                 <div className="flex items-center gap-2 mb-1.5">
                   {log.status === "running" ? (
                     <Loader2 size={14} className="animate-spin text-[var(--accent)]" />
@@ -111,18 +122,19 @@ export default function LivePanel() {
                   ) : (
                     <XCircle size={14} className="text-[var(--danger)]" />
                   )}
-                  <span className="text-xs font-semibold text-[var(--text-primary)]">
-                    {log.label}
-                  </span>
-                  <code className="text-[10px] text-[var(--accent)] bg-[var(--accent-light)] px-1.5 py-0.5 rounded">
-                    {log.command}
-                  </code>
+                  <span className="text-xs font-semibold text-[var(--text-primary)]">{log.label}</span>
+                  <code className="text-[10px] text-[var(--accent)] bg-[var(--accent-light)] px-1.5 py-0.5 rounded">{log.command}</code>
+                  {log.sourceFile && (
+                    <span className="flex items-center gap-1 text-[10px] text-[var(--text-muted)]">
+                      <FileText size={10} />
+                      {log.sourceFile}
+                    </span>
+                  )}
                   <span className="text-[10px] text-[var(--text-muted)] ml-auto">
                     {log.timestamp.toLocaleTimeString("tr-TR")}
                   </span>
                 </div>
 
-                {/* Output */}
                 {log.status === "running" ? (
                   <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
                     <div className="flex gap-1">
@@ -130,11 +142,11 @@ export default function LivePanel() {
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "150ms" }} />
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "300ms" }} />
                     </div>
-                    Komut isleniyor...
+                    Skill dosyasi okunuyor, Claude API&apos;ye gonderiliyor...
                   </div>
                 ) : (
                   <pre className={clsx(
-                    "text-xs font-mono whitespace-pre-wrap max-h-40 overflow-y-auto",
+                    "text-xs font-mono whitespace-pre-wrap max-h-60 overflow-y-auto leading-relaxed",
                     log.status === "success" ? "text-green-400" : "text-red-400"
                   )}>
                     {log.output}
