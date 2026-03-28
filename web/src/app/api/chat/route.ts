@@ -129,7 +129,17 @@ ${commandSummaries}
 5. Deney sonuclari geldiginde istatistiksel analiz yap
 6. Makale yaziminda akademik standartlari uygula
 7. Her zaman bir sonraki adimi oner
-8. Markdown formatinda duzenli ve okunakli yanit ver`;
+8. Markdown formatinda duzenli ve okunakli yanit ver
+
+## KRITIK DOSYA KURALLARI
+- Kullanici dosya yuklediginde, dosyanin icerigi mesajin icerisinde sana ZATEN verilmistir.
+- Dosya icerigi "--- YUKLENEN DOSYALAR ---" bolumunde yer alir.
+- ASLA kullaniciya dosyayi okumak icin Python, pandas, openpyxl veya baska bir kod VERME.
+- Dosya icerigi zaten elinde, DOGRUDAN analiz et, ozetle, yorumla.
+- Excel dosyalari CSV formatina donusturulmus olarak sana verilir.
+- Kullaniciya "su kodu calistirin" DEME. Sen zaten veriyi goruyorsun, dogrudan islem yap.
+- Tablolari Markdown tablo formatinda goster.
+- Istatistiksel ozet, trend analizi, anomali tespiti gibi analizleri KENDIN yap.`;
 
     // Inject file contents into last user message
     const processedMessages = [...messages];
