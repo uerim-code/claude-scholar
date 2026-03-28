@@ -162,11 +162,30 @@ export default function WorkspacePage() {
         }),
       });
       const data = await res.json();
+      const content = data.content || data.error || "Yanit alinamadi.";
       setMessages((prev) => [...prev, {
         role: "assistant",
-        content: data.content || data.error || "Yanit alinamadi.",
+        content,
         timestamp: new Date(),
       }]);
+
+      // Uzun akademik icerik ise otomatik Word indir
+      const isAcademic = content.length > 2000 && (
+        content.includes("Abstract") ||
+        content.includes("Introduction") ||
+        content.includes("Conclusion") ||
+        content.includes("References") ||
+        content.includes("Ozet") ||
+        content.includes("Giris") ||
+        content.includes("Sonuc") ||
+        content.includes("Kaynaklar") ||
+        content.includes("## 1.") ||
+        content.includes("## 2.")
+      );
+      if (isAcademic && !data.error) {
+        // Otomatik Word indir
+        setTimeout(() => exportToWord(content), 500);
+      }
     } catch {
       setMessages((prev) => [...prev, {
         role: "assistant",

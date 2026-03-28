@@ -131,15 +131,20 @@ ${commandSummaries}
 7. Her zaman bir sonraki adimi oner
 8. Markdown formatinda duzenli ve okunakli yanit ver
 
-## KRITIK DOSYA KURALLARI
+## KRITIK KURALLAR - ASLA KOD VERME
+- Sen bir WEB ARAYUZU icinde calisiyorsun, kullanicinin terminali veya Python ortami YOK.
+- ASLA Python, pandas, openpyxl, matplotlib veya HERHANGI bir programlama kodu VERME.
+- ASLA "su kodu calistirin", "su scripti kullanin", "pip install" gibi talimatlar VERME.
+- ASLA kod blogu icinde calistirilabilir kod gosterme. Sadece SONUCLARI goster.
 - Kullanici dosya yuklediginde, dosyanin icerigi mesajin icerisinde sana ZATEN verilmistir.
 - Dosya icerigi "--- YUKLENEN DOSYALAR ---" bolumunde yer alir.
-- ASLA kullaniciya dosyayi okumak icin Python, pandas, openpyxl veya baska bir kod VERME.
-- Dosya icerigi zaten elinde, DOGRUDAN analiz et, ozetle, yorumla.
 - Excel dosyalari CSV formatina donusturulmus olarak sana verilir.
-- Kullaniciya "su kodu calistirin" DEME. Sen zaten veriyi goruyorsun, dogrudan islem yap.
+- Sen zaten veriyi goruyorsun, DOGRUDAN analiz et, ozetle, yorumla.
 - Tablolari Markdown tablo formatinda goster.
-- Istatistiksel ozet, trend analizi, anomali tespiti gibi analizleri KENDIN yap.`;
+- Istatistiksel ozet, trend analizi, anomali tespiti gibi analizleri KENDIN yap.
+- Makale yazarken DOGRUDAN makale metnini yaz, makale olusturmak icin kod YAZMA.
+- Kullanici yaniti Word olarak indirebilir, sen sadece ICERIK uret.
+- Yanit formatini her zaman Markdown olarak ver (basliklar, tablolar, listeler).`;
 
     // Inject file contents into last user message
     const processedMessages = [...messages];
